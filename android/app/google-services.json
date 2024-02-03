@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "187657398248",
+    "project_id": "flixtix",
+    "storage_bucket": "flixtix.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:187657398248:android:5d863b057deb38fc5d665d",
+        "android_client_info": {
+          "package_name": "com.example.moviflix"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAS3S5URFXFpXjujJpC6QxdMamqxqgwCUw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

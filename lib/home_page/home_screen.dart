@@ -29,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void saveNewTask() {
     setState(() {
       todoList.add([_controller.text, false]);
+      _controller.clear();
     });
     Navigator.pop(context);
   }
@@ -45,6 +46,13 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
     );
+  }
+
+  // delete a task from the todoList
+  void deleteTask(int index) {
+    setState(() {
+      todoList.removeAt(index);
+    });
   }
 
   @override
@@ -66,6 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
             taskName: todoList[index][0],
             isCompleted: todoList[index][1],
             onChanged: (value) => onChanged(index, value),
+            onDelete: (context) => deleteTask(index),
           );
         },
       ),

@@ -23,6 +23,7 @@ class CustomDialogBox extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             TextField(
+              autofocus: true,
               controller: controller,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),

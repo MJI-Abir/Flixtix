@@ -7,8 +7,14 @@ environment:
   sdk: '>=3.2.4 <4.0.0'
 
 dependencies:
+  cloud_firestore: ^4.15.3
+  firebase_auth: ^4.17.3
+  firebase_core: ^2.25.3
+  firebase_database: ^10.4.4
+  firebase_storage: ^11.6.4
   flutter:
     sdk: flutter
+  flutter_slidable: ^3.0.1
 
 dev_dependencies:
   flutter_test:
