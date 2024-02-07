@@ -7,11 +7,11 @@ class CustomDialogBox extends StatelessWidget {
     super.key,
     required this.onSave,
     required this.onCancel,
-    required this.controller,
+    required this.taskNameController,
   });
   VoidCallback onSave;
   VoidCallback onCancel;
-  final controller;
+  final taskNameController;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class CustomDialogBox extends StatelessWidget {
           children: [
             TextField(
               autofocus: true,
-              controller: controller,
+              controller: taskNameController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: "Add a new task",

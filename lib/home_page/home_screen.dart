@@ -1,3 +1,4 @@
+import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:moviflix/utils/custom_dialog_box.dart";
 import "package:moviflix/utils/todo_list_tile.dart";
@@ -11,7 +12,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   //controller
-  final _controller = TextEditingController();
+  final _taskNameController = TextEditingController();
+  final _firestore = FirebaseFirestore.instance;
   // Todo default list
   List todoList = [
     ["Finish Homework", false],
@@ -26,11 +28,19 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // save new task to todo list
-  void saveNewTask() {
+  void saveNewTask() async {
+    String taskName = _taskNameController.text;
+    DocumentReference docRef = await _firestore.collection('tasks').add(
+      {
+        'taskName': taskName,
+        'isCompleted': false,
+      },
+    );
     setState(() {
-      todoList.add([_controller.text, false]);
-      _controller.clear();
+      todoList.add([taskName, false]);
+      _taskNameController.clear();
     });
+    // ignore: use_build_context_synchronously
     Navigator.pop(context);
   }
 
@@ -40,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       builder: (context) {
         return CustomDialogBox(
-          controller: _controller,
+          taskNameController: _taskNameController,
           onSave: saveNewTask,
           onCancel: () => Navigator.of(context).pop(),
         );
@@ -67,15 +77,41 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Theme.of(context).primaryColor,
       ),
       backgroundColor: Colors.yellow[300],
-      body: ListView.builder(
-        itemCount: todoList.length,
-        itemBuilder: (context, index) {
-          return TodoListTile(
-            taskName: todoList[index][0],
-            isCompleted: todoList[index][1],
-            onChanged: (value) => onChanged(index, value),
-            onDelete: (context) => deleteTask(index),
-          );
+      body: StreamBuilder<QuerySnapshot>(
+        stream: _firestore.collection('tasks').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView(
+              children: snapshot.data!.docs.map(
+                (DocumentSnapshot document) {
+                  Map<String, dynamic> data =
+                      document.data()! as Map<String, dynamic>;
+                  return TodoListTile(
+                    taskName: data['taskName'],
+                    isCompleted: data['isCompleted'],
+                    onDelete: (context) => deleteTask(0),
+                  );
+                },
+              ).toList(),
+            );
+            // return ListView.builder(
+            //   itemCount: snapshot.data!.docs.length,
+            //   itemBuilder: (context, index) {
+            //     return TodoListTile(
+            //       taskName: todoList[index][0],
+            //       isCompleted: todoList[index][1],
+            //       onChanged: (value) => onChanged(index, value),
+            //       onDelete: (context) => deleteTask(index),
+            //     );
+            //   },
+            // );
+          } else if (snapshot.hasError) {
+            return const Center(
+              child: Text('No Tasks'),
+            );
+          } else {
+            return const CircularProgressIndicator();
+          }
         },
       ),
       floatingActionButton: FloatingActionButton(
