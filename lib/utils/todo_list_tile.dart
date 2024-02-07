@@ -11,7 +11,7 @@ class TodoListTile extends StatelessWidget {
     super.key,
     required this.taskName,
     required this.isCompleted,
-    this.onChanged,
+    required this.onChanged,
     required this.onDelete,
   });
 
@@ -46,6 +46,13 @@ class TodoListTile extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.yellow,
             borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.yellow[600]!,
+                blurRadius: 5.0,
+                offset: const Offset(0, 5), // shadow direction: bottom right
+              ),
+            ],
           ),
           child: Row(
             children: [

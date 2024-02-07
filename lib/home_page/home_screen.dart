@@ -1,6 +1,7 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
-import "package:moviflix/utils/custom_dialog_box.dart";
+import "package:moviflix/utils/custom_alert_dialog.dart";
+import 'package:moviflix/utils/custom_dialog_box_with_text_field.dart';
 import "package:moviflix/utils/todo_list_tile.dart";
 
 class HomeScreen extends StatefulWidget {
@@ -20,13 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
     ["Do Exercise", false],
   ];
 
-  // checklist is tapped
-  void onChanged(int index, bool? value) {
-    setState(() {
-      todoList[index][1] = !todoList[index][1];
-    });
-  }
-
   // save new task to todo list
   void saveNewTask() async {
     String taskName = _taskNameController.text;
@@ -36,8 +30,11 @@ class _HomeScreenState extends State<HomeScreen> {
         'isCompleted': false,
       },
     );
+    String taskId = docRef.id;
+    await _firestore.collection('tasks').doc(taskId).update(
+      {'id': taskId},
+    );
     setState(() {
-      todoList.add([taskName, false]);
       _taskNameController.clear();
     });
     // ignore: use_build_context_synchronously
@@ -49,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
     showDialog(
       context: context,
       builder: (context) {
-        return CustomDialogBox(
+        return CustomDialogBoxWithTextField(
           taskNameController: _taskNameController,
           onSave: saveNewTask,
           onCancel: () => Navigator.of(context).pop(),
@@ -60,9 +57,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // delete a task from the todoList
   void deleteTask(int index) {
-    setState(() {
-      todoList.removeAt(index);
-    });
+    setState(() {});
+  }
+
+  // checklist is tapped
+  void checkboxChanged(String taskId, bool? value) async {
+    await _firestore.collection('tasks').doc(taskId).update(
+      {'isCompleted': value},
+    );
+    setState(() {});
+  }
+
+  Widget openAlertDialog() {
+    return CustomAlertDialog(onCancel: () {}, onDelete: () {});
   }
 
   @override
@@ -89,22 +96,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   return TodoListTile(
                     taskName: data['taskName'],
                     isCompleted: data['isCompleted'],
-                    onDelete: (context) => deleteTask(0),
+                    onDelete: (context) => openAlertDialog,
+                    onChanged: (value) => checkboxChanged(data['id'], value),
                   );
                 },
               ).toList(),
             );
-            // return ListView.builder(
-            //   itemCount: snapshot.data!.docs.length,
-            //   itemBuilder: (context, index) {
-            //     return TodoListTile(
-            //       taskName: todoList[index][0],
-            //       isCompleted: todoList[index][1],
-            //       onChanged: (value) => onChanged(index, value),
-            //       onDelete: (context) => deleteTask(index),
-            //     );
-            //   },
-            // );
           } else if (snapshot.hasError) {
             return const Center(
               child: Text('No Tasks'),

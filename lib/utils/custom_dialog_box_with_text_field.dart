@@ -2,8 +2,8 @@ import "package:flutter/material.dart";
 import "package:moviflix/utils/custom_material_button.dart";
 
 // ignore: must_be_immutable
-class CustomDialogBox extends StatelessWidget {
-  CustomDialogBox({
+class CustomDialogBoxWithTextField extends StatelessWidget {
+  CustomDialogBoxWithTextField({
     super.key,
     required this.onSave,
     required this.onCancel,
