@@ -6,23 +6,34 @@ class CustomAlertDialog extends StatelessWidget {
   CustomAlertDialog({
     super.key,
     required this.onCancel,
-    required this.onDelete,
+    required this.onUpdate,
+    required this.taskNameController,
+    required this.taskName,
   });
 
-  VoidCallback onDelete;
+  VoidCallback onUpdate;
   VoidCallback onCancel;
+  final String taskName;
+  final TextEditingController taskNameController;
 
   @override
   Widget build(BuildContext context) {
+    print('taskName: $taskName');
+    taskNameController.text = taskName;
     return AlertDialog(
         backgroundColor: Colors.yellow[300],
         content: SizedBox(
           height: 120,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              const Text('Delete'),
-              const Text('Are you sure you want to delete the task?'),
+              TextField(
+                autofocus: true,
+                controller: taskNameController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -30,9 +41,10 @@ class CustomAlertDialog extends StatelessWidget {
                     text: "Cancel",
                     onPressed: onCancel,
                   ),
+                  const SizedBox(width: 10),
                   CustomMaterialButton(
-                    text: "Delete",
-                    onPressed: onDelete,
+                    text: "Update",
+                    onPressed: onUpdate,
                   ),
                 ],
               )

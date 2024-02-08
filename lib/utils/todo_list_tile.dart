@@ -7,12 +7,14 @@ class TodoListTile extends StatelessWidget {
   final bool isCompleted;
   final Function(bool?)? onChanged;
   Function(BuildContext)? onDelete;
+  final Function(BuildContext)? onEditPressed;
   TodoListTile({
     super.key,
     required this.taskName,
     required this.isCompleted,
     required this.onChanged,
     required this.onDelete,
+    required this.onEditPressed,
   });
 
   @override
@@ -24,7 +26,7 @@ class TodoListTile extends StatelessWidget {
           motion: const DrawerMotion(),
           children: [
             SlidableAction(
-              onPressed: (context) {},
+              onPressed: onEditPressed,
               icon: Icons.edit,
               label: "Edit",
               backgroundColor: Colors.grey,

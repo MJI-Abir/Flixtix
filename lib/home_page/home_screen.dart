@@ -37,6 +37,37 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.pop(context);
   }
 
+  Future updateTask(String taskId) async {
+    String taskName = _taskNameController.text;
+    _firestore
+        .collection('tasks')
+        .doc(taskId)
+        .update({'taskName': taskName})
+        .then(
+          (_) => Fluttertoast.showToast(
+            msg: "Task updated successfully",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.SNACKBAR,
+            backgroundColor: Colors.yellow,
+            textColor: Colors.black,
+            fontSize: 14.0,
+          ),
+        )
+        .catchError(
+          (error) => Fluttertoast.showToast(
+            msg: "Failed: $error",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.SNACKBAR,
+            backgroundColor: Colors.black54,
+            textColor: Colors.white,
+            fontSize: 14.0,
+          ),
+        );
+    setState(() {
+      Navigator.of(context).pop();
+    });
+  }
+
   void openDialogBox() {
     showDialog(
       context: context,
@@ -62,7 +93,6 @@ class _HomeScreenState extends State<HomeScreen> {
             gravity: ToastGravity.SNACKBAR,
             backgroundColor: Colors.yellow,
             textColor: Colors.black,
-            timeInSecForIosWeb: 1,
             fontSize: 14.0,
           ),
         )
@@ -86,11 +116,16 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
-  void openAlertDialog() {
+  void openUpdateAlertDialog(String taskId, String taskName) {
     showDialog(
       context: context,
       builder: (context) {
-        return CustomAlertDialog(onCancel: () {}, onDelete: () {});
+        return CustomAlertDialog(
+          onCancel: () => Navigator.of(context).pop(),
+          onUpdate: () => updateTask(taskId),
+          taskNameController: _taskNameController,
+          taskName: taskName,
+        );
       },
     );
   }
@@ -121,6 +156,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     isCompleted: data['isCompleted'],
                     onDelete: (context) => deleteTask(data['id']),
                     onChanged: (value) => checkboxChanged(data['id'], value),
+                    onEditPressed: (context) =>
+                        openUpdateAlertDialog(data['id'], data['taskName']),
                   );
                 },
               ).toList(),

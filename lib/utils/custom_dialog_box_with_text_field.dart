@@ -11,7 +11,7 @@ class CustomDialogBoxWithTextField extends StatelessWidget {
   });
   VoidCallback onSave;
   VoidCallback onCancel;
-  final taskNameController;
+  final TextEditingController taskNameController;
 
   @override
   Widget build(BuildContext context) {
