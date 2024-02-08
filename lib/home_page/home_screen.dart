@@ -13,22 +13,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  //controller
   final _taskNameController = TextEditingController();
   final _firestore = FirebaseFirestore.instance;
-  // Todo default list
-  List todoList = [
-    ["Finish Homework", false],
-    ["Do Exercise", false],
-  ];
 
-  // save new task to todo list
   void saveNewTask() async {
     String taskName = _taskNameController.text;
+    DateTime now = DateTime.now();
     DocumentReference docRef = await _firestore.collection('tasks').add(
       {
         'taskName': taskName,
         'isCompleted': false,
+        'timestamp': now,
       },
     );
     String taskId = docRef.id;
@@ -42,7 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.pop(context);
   }
 
-  // open dialog box to create new task
   void openDialogBox() {
     showDialog(
       context: context,
@@ -56,7 +50,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // delete a task from the todoList
   Future deleteTask(String taskId) async {
     _firestore
         .collection('tasks')
@@ -86,7 +79,6 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
-  // checklist is tapped
   void checkboxChanged(String taskId, bool? value) async {
     await _firestore.collection('tasks').doc(taskId).update(
       {'isCompleted': value},
@@ -116,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       backgroundColor: Colors.yellow[300],
       body: StreamBuilder<QuerySnapshot>(
-        stream: _firestore.collection('tasks').snapshots(),
+        stream: _firestore.collection('tasks').orderBy('timestamp').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView(
@@ -138,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Text('No Tasks'),
             );
           } else {
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),
