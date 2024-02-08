@@ -1,5 +1,6 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
+import "package:fluttertoast/fluttertoast.dart";
 import "package:moviflix/utils/custom_alert_dialog.dart";
 import 'package:moviflix/utils/custom_dialog_box_with_text_field.dart';
 import "package:moviflix/utils/todo_list_tile.dart";
@@ -56,7 +57,32 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // delete a task from the todoList
-  void deleteTask(int index) {
+  Future deleteTask(String taskId) async {
+    _firestore
+        .collection('tasks')
+        .doc(taskId)
+        .delete()
+        .then(
+          (_) => Fluttertoast.showToast(
+            msg: "Task deleted successfully",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.SNACKBAR,
+            backgroundColor: Colors.yellow,
+            textColor: Colors.black,
+            timeInSecForIosWeb: 1,
+            fontSize: 14.0,
+          ),
+        )
+        .catchError(
+          (error) => Fluttertoast.showToast(
+            msg: "Failed: $error",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.SNACKBAR,
+            backgroundColor: Colors.black54,
+            textColor: Colors.white,
+            fontSize: 14.0,
+          ),
+        );
     setState(() {});
   }
 
@@ -68,8 +94,13 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
-  Widget openAlertDialog() {
-    return CustomAlertDialog(onCancel: () {}, onDelete: () {});
+  void openAlertDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomAlertDialog(onCancel: () {}, onDelete: () {});
+      },
+    );
   }
 
   @override
@@ -96,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return TodoListTile(
                     taskName: data['taskName'],
                     isCompleted: data['isCompleted'],
-                    onDelete: (context) => openAlertDialog,
+                    onDelete: (context) => deleteTask(data['id']),
                     onChanged: (value) => checkboxChanged(data['id'], value),
                   );
                 },
