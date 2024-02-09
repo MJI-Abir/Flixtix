@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_slidable/flutter_slidable.dart";
+import "package:moviflix/utils/my_colors.dart";
 
 // ignore: must_be_immutable
 class TodoListTile extends StatelessWidget {
@@ -20,7 +21,8 @@ class TodoListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 25.0, right: 25, top: 25),
+      padding:
+          const EdgeInsets.only(left: 25.0, right: 25, top: 12.5, bottom: 12.5),
       child: Slidable(
         endActionPane: ActionPane(
           motion: const DrawerMotion(),
@@ -46,13 +48,13 @@ class TodoListTile extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(25),
           decoration: BoxDecoration(
-            color: Colors.yellow,
+            color: MyColors.appTheme,
             borderRadius: BorderRadius.circular(20),
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
-                color: Colors.yellow[600]!,
+                color: MyColors.cardShadowColor,
                 blurRadius: 5.0,
-                offset: const Offset(0, 5), // shadow direction: bottom right
+                offset: Offset(0, 5), // shadow direction: bottom right
               ),
             ],
           ),

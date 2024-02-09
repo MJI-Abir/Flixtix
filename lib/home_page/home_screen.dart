@@ -1,9 +1,10 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
-import "package:fluttertoast/fluttertoast.dart";
-import "package:moviflix/utils/custom_alert_dialog.dart";
-import 'package:moviflix/utils/custom_dialog_box_with_text_field.dart';
-import "package:moviflix/utils/todo_list_tile.dart";
+import "package:moviflix/utils/my_colors.dart";
+import "package:moviflix/widgets/custom_alert_dialog.dart";
+import "package:moviflix/widgets/custom_dialog_box_with_text_field.dart";
+import "package:moviflix/widgets/task_operations.dart";
+import "package:moviflix/widgets/todo_list_tile.dart";
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,104 +17,20 @@ class _HomeScreenState extends State<HomeScreen> {
   final _taskNameController = TextEditingController();
   final _firestore = FirebaseFirestore.instance;
 
-  void saveNewTask() async {
-    String taskName = _taskNameController.text;
-    DateTime now = DateTime.now();
-    DocumentReference docRef = await _firestore.collection('tasks').add(
-      {
-        'taskName': taskName,
-        'isCompleted': false,
-        'timestamp': now,
-      },
-    );
-    String taskId = docRef.id;
-    await _firestore.collection('tasks').doc(taskId).update(
-      {'id': taskId},
-    );
-    setState(() {
-      _taskNameController.clear();
-    });
-    // ignore: use_build_context_synchronously
-    Navigator.pop(context);
-  }
-
-  Future updateTask(String taskId) async {
-    String taskName = _taskNameController.text;
-    _firestore
-        .collection('tasks')
-        .doc(taskId)
-        .update({'taskName': taskName})
-        .then(
-          (_) => Fluttertoast.showToast(
-            msg: "Task updated successfully",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.SNACKBAR,
-            backgroundColor: Colors.yellow,
-            textColor: Colors.black,
-            fontSize: 14.0,
-          ),
-        )
-        .catchError(
-          (error) => Fluttertoast.showToast(
-            msg: "Failed: $error",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.SNACKBAR,
-            backgroundColor: Colors.black54,
-            textColor: Colors.white,
-            fontSize: 14.0,
-          ),
-        );
-    setState(() {
-      Navigator.of(context).pop();
-    });
-  }
-
   void openDialogBox() {
     showDialog(
       context: context,
       builder: (context) {
         return CustomDialogBoxWithTextField(
           taskNameController: _taskNameController,
-          onSave: saveNewTask,
+          onSave: () {
+            TaskOperations.saveNewTask(context, _taskNameController);
+            _taskNameController.clear();
+          },
           onCancel: () => Navigator.of(context).pop(),
         );
       },
     );
-  }
-
-  Future deleteTask(String taskId) async {
-    _firestore
-        .collection('tasks')
-        .doc(taskId)
-        .delete()
-        .then(
-          (_) => Fluttertoast.showToast(
-            msg: "Task deleted successfully",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.SNACKBAR,
-            backgroundColor: Colors.yellow,
-            textColor: Colors.black,
-            fontSize: 14.0,
-          ),
-        )
-        .catchError(
-          (error) => Fluttertoast.showToast(
-            msg: "Failed: $error",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.SNACKBAR,
-            backgroundColor: Colors.black54,
-            textColor: Colors.white,
-            fontSize: 14.0,
-          ),
-        );
-    setState(() {});
-  }
-
-  void checkboxChanged(String taskId, bool? value) async {
-    await _firestore.collection('tasks').doc(taskId).update(
-      {'isCompleted': value},
-    );
-    setState(() {});
   }
 
   void openUpdateAlertDialog(String taskId, String taskName) {
@@ -122,7 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context) {
         return CustomAlertDialog(
           onCancel: () => Navigator.of(context).pop(),
-          onUpdate: () => updateTask(taskId),
+          onUpdate: () =>
+              TaskOperations.updateTask(context, _taskNameController, taskId),
           taskNameController: _taskNameController,
           taskName: taskName,
         );
@@ -141,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0,
         backgroundColor: Theme.of(context).primaryColor,
       ),
-      backgroundColor: Colors.yellow[300],
+      backgroundColor: MyColors.appBgColor,
       body: StreamBuilder<QuerySnapshot>(
         stream: _firestore.collection('tasks').orderBy('timestamp').snapshots(),
         builder: (context, snapshot) {
@@ -154,8 +72,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   return TodoListTile(
                     taskName: data['taskName'],
                     isCompleted: data['isCompleted'],
-                    onDelete: (context) => deleteTask(data['id']),
-                    onChanged: (value) => checkboxChanged(data['id'], value),
+                    onDelete: (context) =>
+                        TaskOperations.deleteTask(data['id']),
+                    onChanged: (value) =>
+                        TaskOperations.checkboxChanged(data['id'], value),
                     onEditPressed: (context) =>
                         openUpdateAlertDialog(data['id'], data['taskName']),
                   );

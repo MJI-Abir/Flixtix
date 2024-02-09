@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:moviflix/utils/custom_material_button.dart';
+import 'package:moviflix/utils/my_colors.dart';
+import 'package:moviflix/widgets/custom_material_button.dart';
 
 // ignore: must_be_immutable
 class CustomAlertDialog extends StatelessWidget {
@@ -21,7 +22,7 @@ class CustomAlertDialog extends StatelessWidget {
     print('taskName: $taskName');
     taskNameController.text = taskName;
     return AlertDialog(
-        backgroundColor: Colors.yellow[300],
+        backgroundColor: MyColors.appBgColor,
         content: SizedBox(
           height: 120,
           child: Column(
