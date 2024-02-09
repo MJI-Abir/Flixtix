@@ -11,10 +11,34 @@ class FlixtixPage extends StatefulWidget {
 
 class _FlixtixPageState extends State<FlixtixPage> {
   final List<List> moviesList = [
-    ['inception', 'description abc', 8.3],
-    ['12th fail', 'description good', 8.0],
-    ['interstellar', 'description very good', 8.5],
-    ['once upon a time in mumbai', 'description', 7.7],
+    [
+      'inception',
+      'description abc',
+      8.3,
+      8.5,
+      'assets/images/animal_cover.png',
+    ],
+    [
+      '12th fail',
+      'description good',
+      8.0,
+      8.4,
+      'assets/images/animal_cover.png',
+    ],
+    [
+      'interstellar',
+      'description very good',
+      8.5,
+      8.2,
+      'assets/images/animal_cover.png'
+    ],
+    [
+      'once upon a time in mumbai',
+      'description',
+      7.7,
+      6.8,
+      'assets/images/animal_cover.png'
+    ],
   ];
   @override
   Widget build(BuildContext context) {
@@ -35,6 +59,8 @@ class _FlixtixPageState extends State<FlixtixPage> {
             movieName: moviesList[index][0],
             movieDescription: moviesList[index][1],
             personalRating: moviesList[index][2],
+            imdbRating: moviesList[index][3],
+            imgPath: moviesList[index][4],
           );
         },
       ),

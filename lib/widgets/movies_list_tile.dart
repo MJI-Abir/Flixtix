@@ -7,17 +7,20 @@ class MoviesListTile extends StatelessWidget {
     required this.movieName,
     required this.movieDescription,
     required this.personalRating,
+    required this.imdbRating,
+    required this.imgPath,
   });
 
   final String movieName;
   final String movieDescription;
   final double personalRating;
+  final double imdbRating;
+  final String imgPath;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          const EdgeInsets.only(left: 25, right: 25, top: 12.5, bottom: 12.5),
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
       child: Container(
         decoration: BoxDecoration(
           color: MyColors.appTheme,
@@ -37,7 +40,7 @@ class MoviesListTile extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Image.asset(
-                  'assets/images/animal_cover.png',
+                  imgPath,
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: 150,
@@ -58,18 +61,61 @@ class MoviesListTile extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(
-                    'Personal Rating: $personalRating',
-                    style: const TextStyle(
-                      fontFamily: 'PoorStory',
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  const SizedBox(
+                    height: 12,
                   ),
-                  InkWell(
-                    splashFactory: InkSplash.splashFactory,
-                    onTap: () {},
-                    child: const Icon(Icons.favorite_border_outlined),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.person_pin_rounded,
+                        color: Colors.black87,
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        '$personalRating',
+                        style: const TextStyle(
+                          fontFamily: 'PoorStory',
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      const Icon(
+                        Icons.star,
+                        color: Colors.black87,
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        '$imdbRating',
+                        style: const TextStyle(
+                          fontFamily: 'PoorStory',
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Row(
+                    children: [
+                      InkWell(
+                        splashFactory: InkSplash.splashFactory,
+                        onTap: () {},
+                        child: const Icon(Icons.favorite_border_outlined),
+                      ),
+                      const SizedBox(width: 10),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
