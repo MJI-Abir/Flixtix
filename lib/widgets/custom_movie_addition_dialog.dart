@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/widgets/custom_material_button.dart';
 
 // ignore: must_be_immutable
-class CustomMovieAdditionDialog extends StatelessWidget {
+class CustomMovieAdditionDialog extends StatefulWidget {
   const CustomMovieAdditionDialog({
     super.key,
     required this.movieNameController,
@@ -23,17 +26,35 @@ class CustomMovieAdditionDialog extends StatelessWidget {
   final VoidCallback onCancel;
 
   @override
+  State<CustomMovieAdditionDialog> createState() =>
+      _CustomMovieAdditionDialogState();
+}
+
+class _CustomMovieAdditionDialogState extends State<CustomMovieAdditionDialog> {
+  XFile? _image;
+  final ImagePicker _imagePicker = ImagePicker();
+
+  Future getImageFromGallery() async {
+    final pickedImage = await _imagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      _image = pickedImage;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: MyColors.appBgColor,
       content: SizedBox(
-        height: 300,
+        height: 350,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             TextField(
               autofocus: true,
-              controller: movieNameController,
+              controller: widget.movieNameController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: "MOVIE NAME",
@@ -45,7 +66,7 @@ class CustomMovieAdditionDialog extends StatelessWidget {
               children: [
                 Expanded(
                   child: TextField(
-                    controller: personalRatingController,
+                    controller: widget.personalRatingController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: "PERSONAL RATING",
@@ -58,7 +79,7 @@ class CustomMovieAdditionDialog extends StatelessWidget {
                 ),
                 Expanded(
                   child: TextField(
-                    controller: imdbRatingController,
+                    controller: widget.imdbRatingController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: "IMDB RATING",
@@ -69,7 +90,7 @@ class CustomMovieAdditionDialog extends StatelessWidget {
               ],
             ),
             TextField(
-              controller: movieDescriptionController,
+              controller: widget.movieDescriptionController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: "DESCRIPTION",
@@ -79,14 +100,34 @@ class CustomMovieAdditionDialog extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                _image == null
+                    ? const Text('No image selected')
+                    : CircleAvatar(
+                        child: Image.file(
+                          File(_image!.path),
+                        ),
+                      ),
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: getImageFromGallery,
+                  icon: const Icon(
+                    Icons.add_a_photo,
+                    color: Colors.deepPurple,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
                 CustomMaterialButton(
                   text: "CANCEL",
-                  onPressed: onCancel,
+                  onPressed: widget.onCancel,
                 ),
                 const SizedBox(width: 10),
                 CustomMaterialButton(
                   text: "ADD MOVIE",
-                  onPressed: onAddMovie,
+                  onPressed: widget.onAddMovie,
                 ),
               ],
             ),

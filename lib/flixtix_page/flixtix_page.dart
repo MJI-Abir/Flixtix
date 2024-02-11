@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/widgets/custom_movie_addition_dialog.dart';
 import 'package:moviflix/widgets/movies_list_tile.dart';
@@ -15,6 +18,7 @@ class _FlixtixPageState extends State<FlixtixPage> {
   final _personalRatingController = TextEditingController();
   final _imdbRatingController = TextEditingController();
   final _movieDescriptionController = TextEditingController();
+  
 
   final List<List> moviesList = [
     [
@@ -82,22 +86,25 @@ class _FlixtixPageState extends State<FlixtixPage> {
 
   void openMovieAdditionDialog() {
     showDialog(
-        context: context,
-        builder: (context) {
-          return CustomMovieAdditionDialog(
-            movieNameController: _movieNameController,
-            personalRatingController: _personalRatingController,
-            imdbRatingController: _imdbRatingController,
-            movieDescriptionController: _movieDescriptionController,
-            onAddMovie: () {},
-            onCancel: () {
-              _movieNameController.clear();
-              _personalRatingController.clear();
-              _imdbRatingController.clear();
-              _movieDescriptionController.clear();
-              Navigator.of(context).pop();
-            },
-          );
-        });
+      context: context,
+      builder: (context) {
+        return CustomMovieAdditionDialog(
+          movieNameController: _movieNameController,
+          personalRatingController: _personalRatingController,
+          imdbRatingController: _imdbRatingController,
+          movieDescriptionController: _movieDescriptionController,
+          onAddMovie: () {},
+          onCancel: () {
+            _movieNameController.clear();
+            _personalRatingController.clear();
+            _imdbRatingController.clear();
+            _movieDescriptionController.clear();
+            Navigator.of(context).pop();
+          },
+        );
+      },
+    );
   }
+
+  
 }
