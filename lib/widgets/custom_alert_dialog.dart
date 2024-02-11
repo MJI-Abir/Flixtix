@@ -19,38 +19,38 @@ class CustomAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('taskName: $taskName');
     taskNameController.text = taskName;
     return AlertDialog(
-        backgroundColor: MyColors.appBgColor,
-        content: SizedBox(
-          height: 120,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              TextField(
-                autofocus: true,
-                controller: taskNameController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                ),
+      backgroundColor: MyColors.appBgColor,
+      content: SizedBox(
+        height: 120,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextField(
+              autofocus: true,
+              controller: taskNameController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  CustomMaterialButton(
-                    text: "Cancel",
-                    onPressed: onCancel,
-                  ),
-                  const SizedBox(width: 10),
-                  CustomMaterialButton(
-                    text: "Update",
-                    onPressed: onUpdate,
-                  ),
-                ],
-              )
-            ],
-          ),
-        ));
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                CustomMaterialButton(
+                  text: "Cancel",
+                  onPressed: onCancel,
+                ),
+                const SizedBox(width: 10),
+                CustomMaterialButton(
+                  text: "Update",
+                  onPressed: onUpdate,
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

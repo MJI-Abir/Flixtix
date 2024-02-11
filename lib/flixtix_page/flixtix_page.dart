@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moviflix/utils/my_colors.dart';
+import 'package:moviflix/widgets/custom_movie_addition_dialog.dart';
 import 'package:moviflix/widgets/movies_list_tile.dart';
 
 class FlixtixPage extends StatefulWidget {
@@ -10,6 +11,11 @@ class FlixtixPage extends StatefulWidget {
 }
 
 class _FlixtixPageState extends State<FlixtixPage> {
+  final _movieNameController = TextEditingController();
+  final _personalRatingController = TextEditingController();
+  final _imdbRatingController = TextEditingController();
+  final _movieDescriptionController = TextEditingController();
+
   final List<List> moviesList = [
     [
       'inception',
@@ -40,6 +46,7 @@ class _FlixtixPageState extends State<FlixtixPage> {
       'assets/images/animal_cover.png'
     ],
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,11 +72,32 @@ class _FlixtixPageState extends State<FlixtixPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: openMovieAdditionDialog,
         backgroundColor: Theme.of(context).primaryColor,
         shape: const CircleBorder(),
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  void openMovieAdditionDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return CustomMovieAdditionDialog(
+            movieNameController: _movieNameController,
+            personalRatingController: _personalRatingController,
+            imdbRatingController: _imdbRatingController,
+            movieDescriptionController: _movieDescriptionController,
+            onAddMovie: () {},
+            onCancel: () {
+              _movieNameController.clear();
+              _personalRatingController.clear();
+              _imdbRatingController.clear();
+              _movieDescriptionController.clear();
+              Navigator.of(context).pop();
+            },
+          );
+        });
   }
 }

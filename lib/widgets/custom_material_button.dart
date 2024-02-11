@@ -17,6 +17,9 @@ class CustomMaterialButton extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: Theme.of(context).primaryColor,
+        shape: BeveledRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+        ),
       ),
       child: Text(
         text,

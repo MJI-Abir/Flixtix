@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:moviflix/flixtix_page/flixtix_page.dart';
-import 'package:moviflix/home_page/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
