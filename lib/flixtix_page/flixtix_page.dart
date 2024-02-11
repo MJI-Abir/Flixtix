@@ -1,7 +1,5 @@
-import 'dart:io';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/widgets/custom_movie_addition_dialog.dart';
 import 'package:moviflix/widgets/movies_list_tile.dart';
@@ -14,11 +12,13 @@ class FlixtixPage extends StatefulWidget {
 }
 
 class _FlixtixPageState extends State<FlixtixPage> {
+  final _imageUrl = "";
   final _movieNameController = TextEditingController();
   final _personalRatingController = TextEditingController();
   final _imdbRatingController = TextEditingController();
   final _movieDescriptionController = TextEditingController();
-  
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   final List<List> moviesList = [
     [
@@ -89,11 +89,25 @@ class _FlixtixPageState extends State<FlixtixPage> {
       context: context,
       builder: (context) {
         return CustomMovieAdditionDialog(
+          imageUrl: _imageUrl,
           movieNameController: _movieNameController,
           personalRatingController: _personalRatingController,
           imdbRatingController: _imdbRatingController,
           movieDescriptionController: _movieDescriptionController,
-          onAddMovie: () {},
+          onAddMovie: () {
+            saveMovie(
+              _imageUrl,
+              _movieNameController,
+              _personalRatingController,
+              _imdbRatingController,
+              _movieDescriptionController,
+            );
+            _movieNameController.clear();
+            _personalRatingController.clear();
+            _imdbRatingController.clear();
+            _movieDescriptionController.clear();
+            Navigator.of(context).pop();
+          },
           onCancel: () {
             _movieNameController.clear();
             _personalRatingController.clear();
@@ -106,5 +120,34 @@ class _FlixtixPageState extends State<FlixtixPage> {
     );
   }
 
-  
+  void saveMovie(
+    String imageUrl,
+    TextEditingController movieNameController,
+    TextEditingController personalRatingController,
+    TextEditingController imdbRatingController,
+    TextEditingController movieDescriptionController,
+  ) async {
+    print("imageUrl : $imageUrl");
+    String movieName = movieNameController.text;
+    double personalRating = double.parse(personalRatingController.text);
+    double imdbRating = double.parse(imdbRatingController.text);
+    String movieDescription = movieDescriptionController.text;
+    DateTime now = DateTime.now();
+    DocumentReference documentReference =
+        await _firestore.collection('movies').add({
+      'movieName': movieName,
+      'personalRating': personalRating,
+      'imdbRating': imdbRating,
+      'movieDescription': movieDescription,
+      'isFavorite': false,
+      'imageUrl': imageUrl,
+      'timestamp': now,
+    });
+    String movieId = documentReference.id;
+    await _firestore.collection('movies').doc(movieId).update(
+      {'id': movieId},
+    );
+    // ignore: use_build_context_synchronously
+    Navigator.of(context).pop;
+  }
 }

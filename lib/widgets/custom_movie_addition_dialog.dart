@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:moviflix/utils/my_colors.dart';
@@ -7,8 +8,9 @@ import 'package:moviflix/widgets/custom_material_button.dart';
 
 // ignore: must_be_immutable
 class CustomMovieAdditionDialog extends StatefulWidget {
-  const CustomMovieAdditionDialog({
+  CustomMovieAdditionDialog({
     super.key,
+    required this.imageUrl,
     required this.movieNameController,
     required this.personalRatingController,
     required this.imdbRatingController,
@@ -17,6 +19,7 @@ class CustomMovieAdditionDialog extends StatefulWidget {
     required this.onCancel,
   });
 
+  String imageUrl;
   final TextEditingController movieNameController;
   final TextEditingController personalRatingController;
   final TextEditingController imdbRatingController;
@@ -33,13 +36,28 @@ class CustomMovieAdditionDialog extends StatefulWidget {
 class _CustomMovieAdditionDialogState extends State<CustomMovieAdditionDialog> {
   XFile? _image;
   final ImagePicker _imagePicker = ImagePicker();
+  final storageRef = FirebaseStorage.instance.ref();
 
   Future getImageFromGallery() async {
-    final pickedImage = await _imagePicker.pickImage(source: ImageSource.gallery);
+    final pickedImage =
+        await _imagePicker.pickImage(source: ImageSource.gallery);
 
     setState(() {
       _image = pickedImage;
+      uploadImageToFirebaseStorage();
     });
+  }
+
+  Future uploadImageToFirebaseStorage() async {
+    if (_image == null) return;
+    String fileName = DateTime.now().microsecondsSinceEpoch.toString();
+    try {
+      final movieRef = storageRef.child('movie_uploads/$fileName');
+      UploadTask uploadTask= movieRef.putFile(File(_image!.path));
+      widget.imageUrl = await uploadTask.snapshot.ref.getDownloadURL();
+    } catch (e) {
+      print('error occurred');
+    }
   }
 
   @override
