@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:moviflix/flixtix_page/flixtix_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:moviflix/home_page/home_screen.dart';
 import 'firebase_options.dart';
 
 void main() async{
@@ -18,7 +18,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const FlixtixPage(),
+      home: const HomeScreen(),
       theme: ThemeData(primaryColor: Colors.yellow),
     );
   }

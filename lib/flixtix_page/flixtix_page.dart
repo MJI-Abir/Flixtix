@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/widgets/custom_movie_addition_dialog.dart';
@@ -20,38 +19,6 @@ class _FlixtixPageState extends State<FlixtixPage> {
   final _movieDescriptionController = TextEditingController();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final Reference storageRef = FirebaseStorage.instance.ref();
-
-  final List<List> moviesList = [
-    [
-      'inception',
-      'description abc',
-      8.3,
-      8.5,
-      'assets/images/animal_cover.png',
-    ],
-    [
-      '12th fail',
-      'description good',
-      8.0,
-      8.4,
-      'assets/images/animal_cover.png',
-    ],
-    [
-      'interstellar',
-      'description very good',
-      8.5,
-      8.2,
-      'assets/images/animal_cover.png'
-    ],
-    [
-      'once upon a time in mumbai',
-      'description',
-      7.7,
-      6.8,
-      'assets/images/animal_cover.png'
-    ],
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +26,10 @@ class _FlixtixPageState extends State<FlixtixPage> {
       appBar: AppBar(
         title: const Text(
           "Flixtix",
-          style: TextStyle(fontFamily: "SingleDay"),
+          style: TextStyle(
+            fontFamily: "SingleDay",
+            fontWeight: FontWeight.bold,
+          ),
         ),
         elevation: 0,
         backgroundColor: Theme.of(context).primaryColor,
@@ -74,7 +44,7 @@ class _FlixtixPageState extends State<FlixtixPage> {
                   snapshot.data;
               List<QueryDocumentSnapshot> document = querySnapshot!.docs;
 
-              // We need to Convert your documnets to Maps to display
+              // We need to Convert your documents to Maps to display
               List<Map> movies = document.map((e) => e.data() as Map).toList();
               return ListView.builder(
                 itemCount: movies.length,
