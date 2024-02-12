@@ -19,6 +19,7 @@ class CustomMovieAdditionDialog extends StatefulWidget {
     required this.movieDescriptionController,
     required this.onAddMovie,
     required this.onCancel,
+    required this.onImageUrlChanged,
   });
 
   String imageUrl;
@@ -29,6 +30,7 @@ class CustomMovieAdditionDialog extends StatefulWidget {
 
   final VoidCallback onAddMovie;
   final VoidCallback onCancel;
+  final Function(String) onImageUrlChanged;
 
   @override
   State<CustomMovieAdditionDialog> createState() =>
@@ -58,9 +60,11 @@ class _CustomMovieAdditionDialogState extends State<CustomMovieAdditionDialog> {
     });
     try {
       Reference movieRef = storageRef.child('movie_uploads/$fileName');
-      await movieRef.putFile(pickedImage).whenComplete(
-          () => {Fluttertoast.showToast(msg: 'photo uploaded successfully')});
-      widget.imageUrl = await movieRef.getDownloadURL();
+      await movieRef.putFile(pickedImage).whenComplete(() async {
+        String downloadURL = await movieRef.getDownloadURL();
+        Fluttertoast.showToast(msg: 'photo uploaded successfully');
+        widget.onImageUrlChanged(downloadURL);
+      });
     } catch (e) {
       print('error occurred : $e');
     }

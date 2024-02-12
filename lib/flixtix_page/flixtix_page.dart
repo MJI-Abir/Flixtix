@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/widgets/custom_movie_addition_dialog.dart';
@@ -12,13 +13,14 @@ class FlixtixPage extends StatefulWidget {
 }
 
 class _FlixtixPageState extends State<FlixtixPage> {
-  String _imageUrl="";
+  String _imageUrl = "";
   final _movieNameController = TextEditingController();
   final _personalRatingController = TextEditingController();
   final _imdbRatingController = TextEditingController();
   final _movieDescriptionController = TextEditingController();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final Reference storageRef = FirebaseStorage.instance.ref();
 
   final List<List> moviesList = [
     [
@@ -115,6 +117,9 @@ class _FlixtixPageState extends State<FlixtixPage> {
             _imdbRatingController.clear();
             _movieDescriptionController.clear();
             Navigator.of(context).pop();
+          },
+          onImageUrlChanged: (imageUrl) {
+            _imageUrl = imageUrl;
           },
         );
       },
