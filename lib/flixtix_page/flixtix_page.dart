@@ -65,18 +65,40 @@ class _FlixtixPageState extends State<FlixtixPage> {
         backgroundColor: Theme.of(context).primaryColor,
       ),
       backgroundColor: MyColors.appBgColor,
-      body: ListView.builder(
-        itemCount: moviesList.length,
-        itemBuilder: (context, index) {
-          return MoviesListTile(
-            movieName: moviesList[index][0],
-            movieDescription: moviesList[index][1],
-            personalRating: moviesList[index][2],
-            imdbRating: moviesList[index][3],
-            imgPath: moviesList[index][4],
-          );
-        },
-      ),
+      body: StreamBuilder(
+          stream:
+              _firestore.collection('movies').orderBy('timestamp').snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              QuerySnapshot<Map<String, dynamic>>? querySnapshot =
+                  snapshot.data;
+              List<QueryDocumentSnapshot> document = querySnapshot!.docs;
+
+              // We need to Convert your documnets to Maps to display
+              List<Map> movies = document.map((e) => e.data() as Map).toList();
+              return ListView.builder(
+                itemCount: movies.length,
+                itemBuilder: (context, index) {
+                  Map thisMovie = movies[index];
+                  return MoviesListTile(
+                    movieName: thisMovie['movieName'],
+                    movieDescription: thisMovie['movieDescription'],
+                    personalRating: thisMovie['personalRating'],
+                    imdbRating: thisMovie['imdbRating'],
+                    imgPath: thisMovie['imageUrl'],
+                  );
+                },
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('Something went wrong: ${snapshot.error}'),
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
       floatingActionButton: FloatingActionButton(
         onPressed: openMovieAdditionDialog,
         backgroundColor: Theme.of(context).primaryColor,
