@@ -23,10 +23,6 @@ class _TodoPageState extends State<TodoPage> {
       builder: (context) {
         return CustomDialogBoxWithTextField(
           taskNameController: _taskNameController,
-          onSave: () {
-            TaskOperations.saveNewTask(context, _taskNameController);
-            _taskNameController.clear();
-          },
           onCancel: () => Navigator.of(context).pop(),
         );
       },

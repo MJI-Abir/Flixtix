@@ -1,49 +1,116 @@
+import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
+import "package:flutter_spinkit/flutter_spinkit.dart";
+import "package:fluttertoast/fluttertoast.dart";
 import "package:moviflix/utils/my_colors.dart";
 import "package:moviflix/widgets/custom_material_button.dart";
 
 // ignore: must_be_immutable
-class CustomDialogBoxWithTextField extends StatelessWidget {
+class CustomDialogBoxWithTextField extends StatefulWidget {
   CustomDialogBoxWithTextField({
     super.key,
-    required this.onSave,
     required this.onCancel,
     required this.taskNameController,
   });
-  VoidCallback onSave;
   VoidCallback onCancel;
   final TextEditingController taskNameController;
+
+  @override
+  State<CustomDialogBoxWithTextField> createState() =>
+      _CustomDialogBoxWithTextFieldState();
+}
+
+class _CustomDialogBoxWithTextFieldState
+    extends State<CustomDialogBoxWithTextField> {
+  bool isLoading = false;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  void saveNewTask(
+      BuildContext context, TextEditingController taskNameController) async {
+    String taskName = taskNameController.text;
+    DateTime now = DateTime.now();
+    setState(() {
+      isLoading = true;
+    });
+    DocumentReference docRef = await _firestore.collection('tasks').add(
+      {
+        'taskName': taskName,
+        'isCompleted': false,
+        'timestamp': now,
+      },
+    );
+    String taskId = docRef.id;
+    await _firestore
+        .collection('tasks')
+        .doc(taskId)
+        .update(
+          {'id': taskId},
+        )
+        .then(
+          (_) => Fluttertoast.showToast(
+            msg: "Task Created",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.SNACKBAR,
+            backgroundColor: Colors.yellow,
+            textColor: Colors.black,
+            fontSize: 14.0,
+          ),
+        )
+        .catchError(
+          (error) => Fluttertoast.showToast(
+            msg: "Failed: $error",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.SNACKBAR,
+            backgroundColor: Colors.black54,
+            textColor: Colors.white,
+            fontSize: 14.0,
+          ),
+        );
+    setState(() {
+      isLoading = false;
+    });
+    widget.taskNameController.clear();
+    // ignore: use_build_context_synchronously
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: MyColors.appBgColor,
       content: SizedBox(
-        height: 120,
+        height: 150,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             TextField(
               autofocus: true,
-              controller: taskNameController,
+              controller: widget.taskNameController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: "Add a new task",
               ),
             ),
+            if (isLoading)
+              const SpinKitThreeBounce(
+                color: Colors.black,
+                size: 20,
+              ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 //save button
                 CustomMaterialButton(
                   text: "Save",
-                  onPressed: onSave,
+                  onPressed: () {
+                    saveNewTask(context, widget.taskNameController);
+                  },
                 ),
                 const SizedBox(width: 10),
                 // cancel button
                 CustomMaterialButton(
                   text: "Cancel",
-                  onPressed: onCancel,
+                  onPressed: widget.onCancel,
                 ),
               ],
             ),

@@ -62,7 +62,13 @@ class _CustomMovieAdditionDialogState extends State<CustomMovieAdditionDialog> {
       Reference movieRef = storageRef.child('movie_uploads/$fileName');
       await movieRef.putFile(pickedImage).whenComplete(() async {
         String downloadURL = await movieRef.getDownloadURL();
-        Fluttertoast.showToast(msg: 'photo uploaded successfully');
+        Fluttertoast.showToast(msg: 'photo uploaded successfully',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.SNACKBAR,
+          backgroundColor: Colors.yellow,
+          textColor: Colors.black,
+          fontSize: 14.0,
+        );
         widget.onImageUrlChanged(downloadURL);
       });
     } catch (e) {

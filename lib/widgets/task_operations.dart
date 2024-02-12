@@ -5,25 +5,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 class TaskOperations {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  static void saveNewTask(
-      BuildContext context, TextEditingController taskNameController) async {
-    String taskName = taskNameController.text;
-    DateTime now = DateTime.now();
-    DocumentReference docRef = await _firestore.collection('tasks').add(
-      {
-        'taskName': taskName,
-        'isCompleted': false,
-        'timestamp': now,
-      },
-    );
-    String taskId = docRef.id;
-    await _firestore.collection('tasks').doc(taskId).update(
-      {'id': taskId},
-    );
-    // ignore: use_build_context_synchronously
-    Navigator.pop(context);
-  }
-
   static Future updateTask(BuildContext context,
       TextEditingController taskNameController, String taskId) async {
     String taskName = taskNameController.text;
