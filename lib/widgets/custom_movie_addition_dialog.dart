@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/widgets/custom_material_button.dart';
@@ -34,30 +36,37 @@ class CustomMovieAdditionDialog extends StatefulWidget {
 }
 
 class _CustomMovieAdditionDialogState extends State<CustomMovieAdditionDialog> {
-  XFile? _image;
+  String? _imageUrl;
   final ImagePicker _imagePicker = ImagePicker();
+  bool isLoading = false;
   final storageRef = FirebaseStorage.instance.ref();
 
   Future getImageFromGallery() async {
     final pickedImage =
         await _imagePicker.pickImage(source: ImageSource.gallery);
 
-    setState(() {
-      _image = pickedImage;
-      uploadImageToFirebaseStorage();
-    });
+    if (pickedImage != null) {
+      uploadImageToFirebaseStorage(File(pickedImage.path));
+      _imageUrl = pickedImage.path;
+    }
   }
 
-  Future uploadImageToFirebaseStorage() async {
-    if (_image == null) return;
+  Future uploadImageToFirebaseStorage(pickedImage) async {
     String fileName = DateTime.now().microsecondsSinceEpoch.toString();
+    setState(() {
+      isLoading = true;
+    });
     try {
-      final movieRef = storageRef.child('movie_uploads/$fileName');
-      UploadTask uploadTask= movieRef.putFile(File(_image!.path));
-      widget.imageUrl = await uploadTask.snapshot.ref.getDownloadURL();
+      Reference movieRef = storageRef.child('movie_uploads/$fileName');
+      await movieRef.putFile(pickedImage).whenComplete(
+          () => {Fluttertoast.showToast(msg: 'photo uploaded successfully')});
+      widget.imageUrl = await movieRef.getDownloadURL();
     } catch (e) {
-      print('error occurred');
+      print('error occurred : $e');
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -118,11 +127,11 @@ class _CustomMovieAdditionDialogState extends State<CustomMovieAdditionDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                _image == null
+                _imageUrl == null
                     ? const Text('No image selected')
                     : CircleAvatar(
                         child: Image.file(
-                          File(_image!.path),
+                          File(_imageUrl!),
                         ),
                       ),
                 IconButton(
@@ -135,6 +144,11 @@ class _CustomMovieAdditionDialogState extends State<CustomMovieAdditionDialog> {
                 ),
               ],
             ),
+            if (isLoading)
+              const SpinKitThreeBounce(
+                color: Colors.black,
+                size: 20,
+              ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [

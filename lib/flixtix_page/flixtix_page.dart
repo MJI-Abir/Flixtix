@@ -12,7 +12,7 @@ class FlixtixPage extends StatefulWidget {
 }
 
 class _FlixtixPageState extends State<FlixtixPage> {
-  final _imageUrl = "";
+  String _imageUrl="";
   final _movieNameController = TextEditingController();
   final _personalRatingController = TextEditingController();
   final _imdbRatingController = TextEditingController();
@@ -106,6 +106,7 @@ class _FlixtixPageState extends State<FlixtixPage> {
             _personalRatingController.clear();
             _imdbRatingController.clear();
             _movieDescriptionController.clear();
+            _imageUrl = "";
             Navigator.of(context).pop();
           },
           onCancel: () {
@@ -127,7 +128,6 @@ class _FlixtixPageState extends State<FlixtixPage> {
     TextEditingController imdbRatingController,
     TextEditingController movieDescriptionController,
   ) async {
-    print("imageUrl : $imageUrl");
     String movieName = movieNameController.text;
     double personalRating = double.parse(personalRatingController.text);
     double imdbRating = double.parse(imdbRatingController.text);
@@ -147,7 +147,5 @@ class _FlixtixPageState extends State<FlixtixPage> {
     await _firestore.collection('movies').doc(movieId).update(
       {'id': movieId},
     );
-    // ignore: use_build_context_synchronously
-    Navigator.of(context).pop;
   }
 }
