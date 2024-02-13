@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moviflix/utils/my_colors.dart';
-import 'package:moviflix/widgets/custom_movie_addition_dialog.dart';
+import 'package:moviflix/widgets/movie_add_update_dialog.dart';
 import 'package:moviflix/widgets/movies_list_tile.dart';
 
 class FlixtixPage extends StatefulWidget {
@@ -58,7 +58,14 @@ class _FlixtixPageState extends State<FlixtixPage> {
                     imdbRating: thisMovie['imdbRating'],
                     imgPath: thisMovie['imageUrl'],
                     onDelete: (context) => deleteMovie(thisMovie['id']),
-                    onEditPressed: (p0) {},
+                    onEditPressed: (context) => openUpdateMovieDialog(
+                      thisMovie['id'],
+                      thisMovie['movieName'],
+                      thisMovie['personalRating'],
+                      thisMovie['imdbRating'],
+                      thisMovie['movieDescription'],
+                      thisMovie['imageUrl'],
+                    ),
                   );
                 },
               );
@@ -85,12 +92,22 @@ class _FlixtixPageState extends State<FlixtixPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return CustomMovieAdditionDialog(
-          imageUrl: _imageUrl,
+        return MovieAddUpdateDialog(
+          buttonFunctionality: "add",
           movieNameController: _movieNameController,
           personalRatingController: _personalRatingController,
           imdbRatingController: _imdbRatingController,
           movieDescriptionController: _movieDescriptionController,
+          onImageUrlChanged: (imageUrl) {
+            _imageUrl = imageUrl;
+          },
+          onCancel: () {
+            _movieNameController.clear();
+            _personalRatingController.clear();
+            _imdbRatingController.clear();
+            _movieDescriptionController.clear();
+            Navigator.of(context).pop();
+          },
           onAddMovie: () {
             saveMovie(
               _imageUrl,
@@ -106,6 +123,37 @@ class _FlixtixPageState extends State<FlixtixPage> {
             _imageUrl = "";
             Navigator.of(context).pop();
           },
+        );
+      },
+    );
+  }
+
+  void openUpdateMovieDialog(
+    String movieId,
+    String movieName,
+    double personalRating,
+    double imdbRating,
+    String movieDescription,
+    String imageUrl,
+  ) {
+    showDialog(
+      context: context,
+      builder: ((context) {
+        _imageUrl = imageUrl;
+        return MovieAddUpdateDialog(
+          imageUrl: imageUrl,
+          movieName: movieName,
+          movieDescription: movieDescription,
+          personalRating: personalRating,
+          imdbRating: imdbRating,
+          buttonFunctionality: "update",
+          movieNameController: _movieNameController,
+          personalRatingController: _personalRatingController,
+          imdbRatingController: _imdbRatingController,
+          movieDescriptionController: _movieDescriptionController,
+          onImageUrlChanged: (imageUrl) {
+            _imageUrl = imageUrl;
+          },
           onCancel: () {
             _movieNameController.clear();
             _personalRatingController.clear();
@@ -113,11 +161,18 @@ class _FlixtixPageState extends State<FlixtixPage> {
             _movieDescriptionController.clear();
             Navigator.of(context).pop();
           },
-          onImageUrlChanged: (imageUrl) {
-            _imageUrl = imageUrl;
+          onUpdateMovie: () {
+            updateMovie(
+              _movieNameController,
+              _personalRatingController,
+              _imdbRatingController,
+              _movieDescriptionController,
+              _imageUrl,
+              movieId,
+            );
           },
         );
-      },
+      }),
     );
   }
 
@@ -174,5 +229,52 @@ class _FlixtixPageState extends State<FlixtixPage> {
             fontSize: 14.0,
           ),
         );
+  }
+
+  Future updateMovie(
+    TextEditingController movieNameController,
+    TextEditingController personalRatingController,
+    TextEditingController imdbRatingController,
+    TextEditingController movieDescriptionController,
+    String imageUrl,
+    String movieId,
+  ) async {
+    String movieName = movieNameController.text;
+    String movieDescription = movieDescriptionController.text;
+    double personalRating = double.parse(personalRatingController.text);
+    double imdbRating = double.parse(imdbRatingController.text);
+    _firestore
+        .collection('movies')
+        .doc(movieId)
+        .update(
+          {
+            'movieName': movieName,
+            'movieDescription': movieDescription,
+            'personalRating': personalRating,
+            'imdbRating': imdbRating,
+            'imageUrl': imageUrl,
+          },
+        )
+        .then(
+          (_) => Fluttertoast.showToast(
+            msg: "Movie Updated",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.SNACKBAR,
+            backgroundColor: Colors.yellow,
+            textColor: Colors.black,
+            fontSize: 14.0,
+          ),
+        )
+        .catchError(
+          (error) => Fluttertoast.showToast(
+            msg: "Failed: $error",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.SNACKBAR,
+            backgroundColor: Colors.black54,
+            textColor: Colors.white,
+            fontSize: 14.0,
+          ),
+        );
+    Navigator.of(context).pop();
   }
 }

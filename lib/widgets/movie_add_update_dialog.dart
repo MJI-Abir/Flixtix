@@ -9,36 +9,49 @@ import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/widgets/custom_material_button.dart';
 
 // ignore: must_be_immutable
-class CustomMovieAdditionDialog extends StatefulWidget {
-  CustomMovieAdditionDialog({
+class MovieAddUpdateDialog extends StatefulWidget {
+  MovieAddUpdateDialog({
     super.key,
-    required this.imageUrl,
+    required this.buttonFunctionality,
     required this.movieNameController,
     required this.personalRatingController,
     required this.imdbRatingController,
     required this.movieDescriptionController,
-    required this.onAddMovie,
     required this.onCancel,
-    required this.onImageUrlChanged,
+    this.imageUrl,
+    this.movieName,
+    this.personalRating,
+    this.imdbRating,
+    this.movieDescription,
+    this.onAddMovie,
+    this.onUpdateMovie,
+    this.onImageUrlChanged,
   });
 
-  String imageUrl;
+  final String buttonFunctionality;
   final TextEditingController movieNameController;
   final TextEditingController personalRatingController;
   final TextEditingController imdbRatingController;
   final TextEditingController movieDescriptionController;
-
-  final VoidCallback onAddMovie;
   final VoidCallback onCancel;
-  final Function(String) onImageUrlChanged;
+
+  String? imageUrl;
+  final String? movieName;
+  final double? personalRating;
+  final double? imdbRating;
+  final String? movieDescription;
+
+  final VoidCallback? onAddMovie;
+  final VoidCallback? onUpdateMovie;
+  final Function(String)? onImageUrlChanged;
 
   @override
-  State<CustomMovieAdditionDialog> createState() =>
-      _CustomMovieAdditionDialogState();
+  State<MovieAddUpdateDialog> createState() => _MovieAddUpdateDialogState();
 }
 
-class _CustomMovieAdditionDialogState extends State<CustomMovieAdditionDialog> {
+class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
   String? _imageUrl;
+
   final ImagePicker _imagePicker = ImagePicker();
   bool isLoading = false;
   final storageRef = FirebaseStorage.instance.ref();
@@ -62,17 +75,18 @@ class _CustomMovieAdditionDialogState extends State<CustomMovieAdditionDialog> {
       Reference movieRef = storageRef.child('movie_uploads/$fileName');
       await movieRef.putFile(pickedImage).whenComplete(() async {
         String downloadURL = await movieRef.getDownloadURL();
-        Fluttertoast.showToast(msg: 'photo uploaded successfully',
+        Fluttertoast.showToast(
+          msg: 'photo uploaded successfully',
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.SNACKBAR,
           backgroundColor: Colors.yellow,
           textColor: Colors.black,
           fontSize: 14.0,
         );
-        widget.onImageUrlChanged(downloadURL);
+        widget.onImageUrlChanged!(downloadURL);
       });
     } catch (e) {
-      print('error occurred : $e');
+      Fluttertoast.showToast(msg: "Failed: $e");
     }
     setState(() {
       isLoading = false;
@@ -81,6 +95,15 @@ class _CustomMovieAdditionDialogState extends State<CustomMovieAdditionDialog> {
 
   @override
   Widget build(BuildContext context) {
+    _imageUrl = widget.imageUrl;
+    widget.movieNameController.text =
+        widget.movieName != null ? widget.movieName! : "";
+    widget.movieDescriptionController.text =
+        widget.movieDescription != null ? widget.movieDescription! : "";
+    widget.personalRatingController.text =
+        widget.personalRating != null ? widget.personalRating!.toString() : "";
+    widget.imdbRatingController.text =
+        widget.imdbRating != null ? widget.imdbRating!.toString() : "";
     return AlertDialog(
       backgroundColor: MyColors.appBgColor,
       content: SizedBox(
@@ -140,8 +163,8 @@ class _CustomMovieAdditionDialogState extends State<CustomMovieAdditionDialog> {
                 _imageUrl == null
                     ? const Text('No image selected')
                     : CircleAvatar(
-                        child: Image.file(
-                          File(_imageUrl!),
+                        child: Image.network(
+                          _imageUrl!,
                         ),
                       ),
                 IconButton(
@@ -168,8 +191,12 @@ class _CustomMovieAdditionDialogState extends State<CustomMovieAdditionDialog> {
                 ),
                 const SizedBox(width: 10),
                 CustomMaterialButton(
-                  text: "ADD MOVIE",
-                  onPressed: widget.onAddMovie,
+                  text: widget.buttonFunctionality == "add"
+                      ? "ADD MOVIE"
+                      : "UPDATE",
+                  onPressed: widget.buttonFunctionality == "add"
+                      ? widget.onAddMovie!
+                      : widget.onUpdateMovie!,
                 ),
               ],
             ),
