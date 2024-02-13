@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/widgets/custom_movie_addition_dialog.dart';
 import 'package:moviflix/widgets/movies_list_tile.dart';
@@ -56,6 +57,8 @@ class _FlixtixPageState extends State<FlixtixPage> {
                     personalRating: thisMovie['personalRating'],
                     imdbRating: thisMovie['imdbRating'],
                     imgPath: thisMovie['imageUrl'],
+                    onDelete: (context) => deleteMovie(thisMovie['id']),
+                    onEditPressed: (p0) {},
                   );
                 },
               );
@@ -65,7 +68,7 @@ class _FlixtixPageState extends State<FlixtixPage> {
               );
             } else {
               return const Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(color: Colors.black87),
               );
             }
           }),
@@ -144,5 +147,32 @@ class _FlixtixPageState extends State<FlixtixPage> {
     await _firestore.collection('movies').doc(movieId).update(
       {'id': movieId},
     );
+  }
+
+  Future deleteMovie(String movieId) async {
+    _firestore
+        .collection('movies')
+        .doc(movieId)
+        .delete()
+        .then(
+          (_) => Fluttertoast.showToast(
+            msg: "Movie deleted",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.SNACKBAR,
+            backgroundColor: Colors.yellow,
+            textColor: Colors.black,
+            fontSize: 14.0,
+          ),
+        )
+        .catchError(
+          (error) => Fluttertoast.showToast(
+            msg: "Failed: $error",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.SNACKBAR,
+            backgroundColor: Colors.black54,
+            textColor: Colors.white,
+            fontSize: 14.0,
+          ),
+        );
   }
 }
