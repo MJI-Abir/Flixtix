@@ -95,7 +95,8 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
 
   @override
   Widget build(BuildContext context) {
-    _imageUrl = widget.imageUrl;
+    _imageUrl =
+        widget.buttonFunctionality == "update" ? widget.imageUrl : _imageUrl;
     widget.movieNameController.text =
         widget.movieName != null ? widget.movieName! : "";
     widget.movieDescriptionController.text =
@@ -163,9 +164,13 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
                 _imageUrl == null
                     ? const Text('No image selected')
                     : CircleAvatar(
-                        child: Image.network(
-                          _imageUrl!,
-                        ),
+                        child: widget.buttonFunctionality == "update"
+                            ? Image.network(
+                                _imageUrl!,
+                              )
+                            : Image.file(
+                                File(_imageUrl!),
+                              ),
                       ),
                 IconButton(
                   padding: EdgeInsets.zero,

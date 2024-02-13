@@ -86,7 +86,11 @@ class _TodoPageState extends State<TodoPage> {
               child: Text('No Tasks'),
             );
           } else {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(
+                color: Colors.black87,
+              ),
+            );
           }
         },
       ),
