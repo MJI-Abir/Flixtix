@@ -1,0 +1,4 @@
+enum ButtonFunctionality {
+  update,
+  add,
+}

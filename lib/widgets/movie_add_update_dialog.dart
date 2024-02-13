@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:moviflix/enums/enums.dart';
 import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/widgets/custom_material_button.dart';
 
@@ -28,7 +29,7 @@ class MovieAddUpdateDialog extends StatefulWidget {
     this.onImageUrlChanged,
   });
 
-  final String buttonFunctionality;
+  final ButtonFunctionality buttonFunctionality;
   final TextEditingController movieNameController;
   final TextEditingController personalRatingController;
   final TextEditingController imdbRatingController;
@@ -76,7 +77,7 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
       await movieRef.putFile(pickedImage).whenComplete(() async {
         String downloadURL = await movieRef.getDownloadURL();
         Fluttertoast.showToast(
-          msg: 'photo uploaded successfully',
+          msg: 'photo uploaded',
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.SNACKBAR,
           backgroundColor: Colors.yellow,
@@ -96,7 +97,7 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
   @override
   Widget build(BuildContext context) {
     _imageUrl =
-        widget.buttonFunctionality == "update" ? widget.imageUrl : _imageUrl;
+        widget.buttonFunctionality == ButtonFunctionality.update ? widget.imageUrl : _imageUrl;
     widget.movieNameController.text =
         widget.movieName != null ? widget.movieName! : "";
     widget.movieDescriptionController.text =
@@ -164,7 +165,7 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
                 _imageUrl == null
                     ? const Text('No image selected')
                     : CircleAvatar(
-                        child: widget.buttonFunctionality == "update"
+                        child: widget.buttonFunctionality == ButtonFunctionality.update
                             ? Image.network(
                                 _imageUrl!,
                               )
@@ -196,10 +197,10 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
                 ),
                 const SizedBox(width: 10),
                 CustomMaterialButton(
-                  text: widget.buttonFunctionality == "add"
+                  text: widget.buttonFunctionality == ButtonFunctionality.add
                       ? "ADD MOVIE"
                       : "UPDATE",
-                  onPressed: widget.buttonFunctionality == "add"
+                  onPressed: widget.buttonFunctionality == ButtonFunctionality.add
                       ? widget.onAddMovie!
                       : widget.onUpdateMovie!,
                 ),

@@ -34,7 +34,6 @@ class MoviesListTile extends StatelessWidget {
             SlidableAction(
               onPressed: onEditPressed,
               icon: Icons.edit,
-              label: "Edit",
               backgroundColor: Colors.grey,
               foregroundColor: Colors.white,
               borderRadius: BorderRadius.circular(12),
@@ -42,7 +41,6 @@ class MoviesListTile extends StatelessWidget {
             SlidableAction(
               onPressed: onDelete,
               icon: Icons.delete,
-              label: "Delete",
               backgroundColor: const Color(0xFFFE4A49),
               foregroundColor: Colors.white,
               borderRadius: BorderRadius.circular(12),

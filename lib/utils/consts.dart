@@ -6,4 +6,5 @@ class Consts {
     Icons.movie_filter,
     Icons.person_2,
   ];
+  
 }

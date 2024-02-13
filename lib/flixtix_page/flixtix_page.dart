@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:moviflix/enums/enums.dart';
 import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/widgets/movie_add_update_dialog.dart';
 import 'package:moviflix/widgets/movies_list_tile.dart';
@@ -93,7 +94,7 @@ class _FlixtixPageState extends State<FlixtixPage> {
       context: context,
       builder: (context) {
         return MovieAddUpdateDialog(
-          buttonFunctionality: "add",
+          buttonFunctionality: ButtonFunctionality.add,
           movieNameController: _movieNameController,
           personalRatingController: _personalRatingController,
           imdbRatingController: _imdbRatingController,
@@ -141,12 +142,12 @@ class _FlixtixPageState extends State<FlixtixPage> {
       builder: ((context) {
         _imageUrl = imageUrl;
         return MovieAddUpdateDialog(
+          buttonFunctionality: ButtonFunctionality.update,
           imageUrl: imageUrl,
           movieName: movieName,
           movieDescription: movieDescription,
           personalRating: personalRating,
           imdbRating: imdbRating,
-          buttonFunctionality: "update",
           movieNameController: _movieNameController,
           personalRatingController: _personalRatingController,
           imdbRatingController: _imdbRatingController,
@@ -176,7 +177,7 @@ class _FlixtixPageState extends State<FlixtixPage> {
     );
   }
 
-  void saveMovie(
+  Future saveMovie(
     String imageUrl,
     TextEditingController movieNameController,
     TextEditingController personalRatingController,
