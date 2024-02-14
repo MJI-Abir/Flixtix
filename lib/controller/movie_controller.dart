@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:moviflix/utils/commons.dart';
 
@@ -51,18 +52,18 @@ class MovieController {
   static Future deleteMovie(
       BuildContext context, FirebaseFirestore firestore, String movieId) async {
     try {
+      //deleting the image from firebase storage
+      DocumentSnapshot movieSnapshot =
+          await firestore.collection('movies').doc(movieId).get();
+
+      if (movieSnapshot.data() != null) {
+        String imageUrl =
+            (movieSnapshot.data() as Map<String, dynamic>)['imageUrl'];
+        await FirebaseStorage.instance.refFromURL(imageUrl).delete();
+      }
       firestore.collection('movies').doc(movieId).delete().then(
             (_) => showToast(message: 'Movie Deleted'),
           );
-      //deleting the image from firebase storage
-      // DocumentSnapshot movieSnapshot =
-      //     await firestore.collection('movies').doc(movieId).get();
-
-      // if (movieSnapshot.data() != null) {
-      //   String imageUrl =
-      //       (movieSnapshot.data() as Map<String, dynamic>)['imageUrl'];
-      //   await FirebaseStorage.instance.refFromURL(imageUrl).delete();
-      // }
     } catch (error) {
       showToast(
         message: "Failed: $error",
