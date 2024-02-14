@@ -52,8 +52,10 @@ class MovieAddUpdateDialog extends StatefulWidget {
 
 class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
   String? _imageUrl;
+  String? _updatedImageUrl;
 
   final ImagePicker _imagePicker = ImagePicker();
+  bool isImageChanged = false;
   bool isLoading = false;
   final storageRef = FirebaseStorage.instance.ref();
 
@@ -62,14 +64,16 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
         await _imagePicker.pickImage(source: ImageSource.gallery);
 
     if (pickedImage != null) {
+      isImageChanged = true;
       setState(() {
-        _imageUrl = pickedImage.path;
+        widget.buttonFunctionality == ButtonFunctionality.update
+            ? _updatedImageUrl = pickedImage.path
+            : _imageUrl = pickedImage.path;
       });
     }
   }
 
-  Future uploadImageToFirebaseStorage(
-      pickedImage, VoidCallback onSaveMovie) async {
+  Future uploadImageToFirebaseStorage(pickedImage, onSaveMovie) async {
     String fileName = DateTime.now().microsecondsSinceEpoch.toString();
     setState(() {
       isLoading = true;
@@ -82,7 +86,7 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
         onSaveMovie();
       });
     } catch (e) {
-      Fluttertoast.showToast(msg: "Failed: $e");
+      Fluttertoast.showToast(msg: "$e");
     }
     setState(() {
       isLoading = false;
@@ -92,7 +96,11 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
   @override
   Widget build(BuildContext context) {
     if (widget.buttonFunctionality == ButtonFunctionality.update) {
-      _imageUrl = widget.imageUrl;
+      if (isImageChanged) {
+        _imageUrl = _updatedImageUrl;
+      } else {
+        _imageUrl = widget.imageUrl;
+      }
       widget.movieNameController.text = widget.movieName!;
       widget.movieDescriptionController.text = widget.movieDescription!;
       widget.personalRatingController.text = widget.personalRating!.toString();
@@ -116,7 +124,6 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
               ),
             ),
             Row(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   child: TextField(
@@ -159,9 +166,13 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
                     : CircleAvatar(
                         child: widget.buttonFunctionality ==
                                 ButtonFunctionality.update
-                            ? Image.network(
-                                _imageUrl!,
-                              )
+                            ? !isImageChanged
+                                ? Image.network(
+                                    _imageUrl!,
+                                  )
+                                : Image.file(
+                                    File(_imageUrl!),
+                                  )
                             : Image.file(
                                 File(_imageUrl!),
                               ),
@@ -197,8 +208,10 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
                       widget.buttonFunctionality == ButtonFunctionality.add
                           ? () => uploadImageToFirebaseStorage(
                               File(_imageUrl!), widget.onAddMovie!)
-                          : () => uploadImageToFirebaseStorage(
-                              File(_imageUrl!), widget.onUpdateMovie!),
+                          : isImageChanged
+                              ? () => uploadImageToFirebaseStorage(
+                                  File(_imageUrl!), widget.onUpdateMovie!)
+                              : widget.onUpdateMovie!,
                 ),
               ],
             ),

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moviflix/enums/enums.dart';
@@ -137,11 +138,11 @@ class _FlixtixPageState extends State<FlixtixPage> {
         _imageUrl = imageUrl;
         return MovieAddUpdateDialog(
           buttonFunctionality: ButtonFunctionality.update,
-          imageUrl: imageUrl,
           movieName: movieName,
-          movieDescription: movieDescription,
           personalRating: personalRating,
           imdbRating: imdbRating,
+          movieDescription: movieDescription,
+          imageUrl: imageUrl,
           movieNameController: _movieNameController,
           personalRatingController: _personalRatingController,
           imdbRatingController: _imdbRatingController,
@@ -218,39 +219,45 @@ class _FlixtixPageState extends State<FlixtixPage> {
             fontSize: 14.0,
           ),
         );
-        movieNameController.clear();
-        personalRatingController.clear();
-        imdbRatingController.clear();
-        movieDescriptionController.clear();
-        // ignore: use_build_context_synchronously
-        Navigator.of(context).pop();
+    movieNameController.clear();
+    personalRatingController.clear();
+    imdbRatingController.clear();
+    movieDescriptionController.clear();
+    // ignore: use_build_context_synchronously
+    Navigator.of(context).pop();
   }
 
   Future deleteMovie(String movieId) async {
-    _firestore
-        .collection('movies')
-        .doc(movieId)
-        .delete()
-        .then(
-          (_) => Fluttertoast.showToast(
-            msg: "Movie deleted",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.SNACKBAR,
-            backgroundColor: Colors.yellow,
-            textColor: Colors.black,
-            fontSize: 14.0,
-          ),
-        )
-        .catchError(
-          (error) => Fluttertoast.showToast(
-            msg: "Failed: $error",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.SNACKBAR,
-            backgroundColor: Colors.black54,
-            textColor: Colors.white,
-            fontSize: 14.0,
-          ),
-        );
+    try {
+      _firestore.collection('movies').doc(movieId).delete().then(
+            (_) => Fluttertoast.showToast(
+              msg: "Movie deleted",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.SNACKBAR,
+              backgroundColor: Colors.yellow,
+              textColor: Colors.black,
+              fontSize: 14.0,
+            ),
+          );
+      //deleting the image from firebase storage
+      DocumentSnapshot movieSnapshot =
+          await _firestore.collection('movies').doc(movieId).get();
+
+      if (movieSnapshot.data() != null) {
+        String imageUrl =
+            (movieSnapshot.data() as Map<String, dynamic>)['imageUrl'];
+        await FirebaseStorage.instance.refFromURL(imageUrl).delete();
+      }
+    } catch (error) {
+      Fluttertoast.showToast(
+        msg: "Failed: $error",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.SNACKBAR,
+        backgroundColor: Colors.black54,
+        textColor: Colors.white,
+        fontSize: 14.0,
+      );
+    }
   }
 
   Future updateMovie(
@@ -262,9 +269,10 @@ class _FlixtixPageState extends State<FlixtixPage> {
     String movieId,
   ) async {
     String movieName = movieNameController.text;
-    String movieDescription = movieDescriptionController.text;
     double personalRating = double.parse(personalRatingController.text);
     double imdbRating = double.parse(imdbRatingController.text);
+    String movieDescription = movieDescriptionController.text;
+
     _firestore
         .collection('movies')
         .doc(movieId)
@@ -274,7 +282,7 @@ class _FlixtixPageState extends State<FlixtixPage> {
             'movieDescription': movieDescription,
             'personalRating': personalRating,
             'imdbRating': imdbRating,
-            'imageUrl': imageUrl,
+            'imageUrl': _imageUrl,
           },
         )
         .then(
