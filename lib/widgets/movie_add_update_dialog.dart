@@ -62,12 +62,14 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
         await _imagePicker.pickImage(source: ImageSource.gallery);
 
     if (pickedImage != null) {
-      uploadImageToFirebaseStorage(File(pickedImage.path));
-      _imageUrl = pickedImage.path;
+      setState(() {
+        _imageUrl = pickedImage.path;
+      });
     }
   }
 
-  Future uploadImageToFirebaseStorage(pickedImage) async {
+  Future uploadImageToFirebaseStorage(
+      pickedImage, VoidCallback onSaveMovie) async {
     String fileName = DateTime.now().microsecondsSinceEpoch.toString();
     setState(() {
       isLoading = true;
@@ -76,15 +78,8 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
       Reference movieRef = storageRef.child('movie_uploads/$fileName');
       await movieRef.putFile(pickedImage).whenComplete(() async {
         String downloadURL = await movieRef.getDownloadURL();
-        Fluttertoast.showToast(
-          msg: 'photo uploaded',
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.SNACKBAR,
-          backgroundColor: Colors.yellow,
-          textColor: Colors.black,
-          fontSize: 14.0,
-        );
         widget.onImageUrlChanged!(downloadURL);
+        onSaveMovie();
       });
     } catch (e) {
       Fluttertoast.showToast(msg: "Failed: $e");
@@ -96,16 +91,13 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
 
   @override
   Widget build(BuildContext context) {
-    _imageUrl =
-        widget.buttonFunctionality == ButtonFunctionality.update ? widget.imageUrl : _imageUrl;
-    widget.movieNameController.text =
-        widget.movieName != null ? widget.movieName! : "";
-    widget.movieDescriptionController.text =
-        widget.movieDescription != null ? widget.movieDescription! : "";
-    widget.personalRatingController.text =
-        widget.personalRating != null ? widget.personalRating!.toString() : "";
-    widget.imdbRatingController.text =
-        widget.imdbRating != null ? widget.imdbRating!.toString() : "";
+    if (widget.buttonFunctionality == ButtonFunctionality.update) {
+      _imageUrl = widget.imageUrl;
+      widget.movieNameController.text = widget.movieName!;
+      widget.movieDescriptionController.text = widget.movieDescription!;
+      widget.personalRatingController.text = widget.personalRating!.toString();
+      widget.imdbRatingController.text = widget.imdbRating!.toString();
+    }
     return AlertDialog(
       backgroundColor: MyColors.appBgColor,
       content: SizedBox(
@@ -165,7 +157,8 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
                 _imageUrl == null
                     ? const Text('No image selected')
                     : CircleAvatar(
-                        child: widget.buttonFunctionality == ButtonFunctionality.update
+                        child: widget.buttonFunctionality ==
+                                ButtonFunctionality.update
                             ? Image.network(
                                 _imageUrl!,
                               )
@@ -200,9 +193,12 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
                   text: widget.buttonFunctionality == ButtonFunctionality.add
                       ? "ADD MOVIE"
                       : "UPDATE",
-                  onPressed: widget.buttonFunctionality == ButtonFunctionality.add
-                      ? widget.onAddMovie!
-                      : widget.onUpdateMovie!,
+                  onPressed:
+                      widget.buttonFunctionality == ButtonFunctionality.add
+                          ? () => uploadImageToFirebaseStorage(
+                              File(_imageUrl!), widget.onAddMovie!)
+                          : () => uploadImageToFirebaseStorage(
+                              File(_imageUrl!), widget.onUpdateMovie!),
                 ),
               ],
             ),

@@ -117,12 +117,6 @@ class _FlixtixPageState extends State<FlixtixPage> {
               _imdbRatingController,
               _movieDescriptionController,
             );
-            _movieNameController.clear();
-            _personalRatingController.clear();
-            _imdbRatingController.clear();
-            _movieDescriptionController.clear();
-            _imageUrl = "";
-            Navigator.of(context).pop();
           },
         );
       },
@@ -177,7 +171,7 @@ class _FlixtixPageState extends State<FlixtixPage> {
     );
   }
 
-  Future saveMovie(
+  void saveMovie(
     String imageUrl,
     TextEditingController movieNameController,
     TextEditingController personalRatingController,
@@ -200,9 +194,36 @@ class _FlixtixPageState extends State<FlixtixPage> {
       'timestamp': now,
     });
     String movieId = documentReference.id;
-    await _firestore.collection('movies').doc(movieId).update(
-      {'id': movieId},
-    );
+    await _firestore
+        .collection('movies')
+        .doc(movieId)
+        .update(
+          {'id': movieId},
+        )
+        .then((_) => Fluttertoast.showToast(
+              msg: "Movie Added",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.SNACKBAR,
+              backgroundColor: Colors.yellow,
+              textColor: Colors.black,
+              fontSize: 14.0,
+            ))
+        .catchError(
+          (error) => Fluttertoast.showToast(
+            msg: "Failed: $error",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.SNACKBAR,
+            backgroundColor: Colors.black54,
+            textColor: Colors.white,
+            fontSize: 14.0,
+          ),
+        );
+        movieNameController.clear();
+        personalRatingController.clear();
+        imdbRatingController.clear();
+        movieDescriptionController.clear();
+        // ignore: use_build_context_synchronously
+        Navigator.of(context).pop();
   }
 
   Future deleteMovie(String movieId) async {
