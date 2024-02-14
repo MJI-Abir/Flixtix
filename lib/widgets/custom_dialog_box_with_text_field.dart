@@ -1,7 +1,7 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:flutter_spinkit/flutter_spinkit.dart";
-import "package:fluttertoast/fluttertoast.dart";
+import "package:moviflix/utils/commons.dart";
 import "package:moviflix/utils/my_colors.dart";
 import "package:moviflix/widgets/custom_material_button.dart";
 
@@ -47,23 +47,13 @@ class _CustomDialogBoxWithTextFieldState
           {'id': taskId},
         )
         .then(
-          (_) => Fluttertoast.showToast(
-            msg: "Task Created",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.SNACKBAR,
-            backgroundColor: Colors.yellow,
-            textColor: Colors.black,
-            fontSize: 14.0,
+          (_) => showToast(
+            message: "Task Created",
           ),
         )
         .catchError(
-          (error) => Fluttertoast.showToast(
-            msg: "Failed: $error",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.SNACKBAR,
-            backgroundColor: Colors.black54,
-            textColor: Colors.white,
-            fontSize: 14.0,
+          (error) => showToast(
+            message: "Failed: $error",
           ),
         );
     setState(() {

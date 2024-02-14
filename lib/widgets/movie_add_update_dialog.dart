@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:moviflix/enums/enums.dart';
+import 'package:moviflix/utils/commons.dart';
 import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/widgets/custom_material_button.dart';
 
@@ -86,7 +86,7 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
         onSaveMovie();
       });
     } catch (e) {
-      Fluttertoast.showToast(msg: "$e");
+      showToast(message: "$e");
     }
     setState(() {
       isLoading = false;

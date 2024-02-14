@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/widgets/custom_alert_dialog.dart';
 import 'package:moviflix/widgets/custom_dialog_box_with_text_field.dart';
-import 'package:moviflix/widgets/task_operations.dart';
+import 'package:moviflix/controller/task_controller.dart';
 import 'package:moviflix/widgets/todo_list_tile.dart';
 
 class TodoPage extends StatefulWidget {
@@ -36,7 +36,7 @@ class _TodoPageState extends State<TodoPage> {
         return CustomAlertDialog(
           onCancel: () => Navigator.of(context).pop(),
           onUpdate: () =>
-              TaskOperations.updateTask(context, _taskNameController, taskId),
+              TaskController.updateTask(context, _taskNameController, taskId),
           taskNameController: _taskNameController,
           taskName: taskName,
         );
@@ -72,9 +72,9 @@ class _TodoPageState extends State<TodoPage> {
                     taskName: data['taskName'],
                     isCompleted: data['isCompleted'],
                     onDelete: (context) =>
-                        TaskOperations.deleteTask(data['id']),
+                        TaskController.deleteTask(data['id']),
                     onChanged: (value) =>
-                        TaskOperations.checkboxChanged(data['id'], value),
+                        TaskController.checkboxChanged(data['id'], value),
                     onEditPressed: (context) =>
                         openUpdateAlertDialog(data['id'], data['taskName']),
                   );
