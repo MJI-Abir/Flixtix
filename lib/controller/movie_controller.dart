@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:moviflix/config/config.dart';
 import 'package:moviflix/utils/commons.dart';
 import 'package:http/http.dart' as http;
 
 class MovieController {
   static String _imdbRating = "";
   static Future<void> _getImdbRating(String movieName) async {
-    final String apiKey = dotenv.env['API_KEY'] ?? '';
+    const String apiKey = Config.apiKey;
 
     if (movieName.isEmpty) {
       // Show an error message if the movie name is empty

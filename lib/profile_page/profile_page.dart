@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:moviflix/config/config.dart';
 import 'package:moviflix/widgets/custom_material_button.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,7 +16,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String _imdbRating = "";
 
   Future<void> _getImdbRating() async {
-    final String apiKey = '4775675b'; // Replace with your actual API key
+    const String apiKey = Config.apiKey; // Replace with your actual API key
     final String movieName = _movieNameController.text.trim();
 
     if (movieName.isEmpty) {
