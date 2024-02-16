@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:moviflix/utils/commons.dart';
 import 'package:moviflix/utils/my_colors.dart';
+import 'package:moviflix/widgets/rating_widget.dart';
 
 class MoviesListTile extends StatelessWidget {
   const MoviesListTile({
@@ -12,19 +15,21 @@ class MoviesListTile extends StatelessWidget {
     required this.imgPath,
     required this.onDelete,
     required this.onEditPressed,
+    required this.timestamp,
   });
-
   final String movieName;
   final String movieDescription;
   final double personalRating;
-  final double imdbRating;
+  final String imdbRating;
   final String imgPath;
+  final Timestamp timestamp;
 
   final Function(BuildContext)? onDelete;
   final Function(BuildContext)? onEditPressed;
-
   @override
   Widget build(BuildContext context) {
+    var formattedDate =
+        '${timestamp.toDate().day}-${timestamp.toDate().month}-${timestamp.toDate().year}';
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
       child: Slidable(
@@ -92,34 +97,18 @@ class MoviesListTile extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        const Icon(
-                          Icons.person_pin_rounded,
-                          color: Colors.black87,
+                        RatingWidget(
+                          rating: personalRating.toString(),
+                          title: "Your Rating",
+                          icon: Icons.person_pin_rounded,
                         ),
-                        const SizedBox(width: 5),
-                        Text(
-                          '$personalRating',
-                          style: const TextStyle(
-                            fontFamily: 'PoorStory',
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                          ),
+                        const SizedBox(
+                          width: 30,
                         ),
-                        const SizedBox(width: 20),
-                        const Icon(
-                          Icons.star,
-                          color: Colors.black87,
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          '$imdbRating',
-                          style: const TextStyle(
-                            fontFamily: 'PoorStory',
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                          ),
+                        RatingWidget(
+                          rating: imdbRating,
+                          title: 'IMDB Rating',
+                          icon: Icons.star_rounded,
                         ),
                       ],
                     ),
@@ -133,13 +122,10 @@ class MoviesListTile extends StatelessWidget {
                           onTap: () {},
                           child: const Icon(Icons.favorite_border_outlined),
                         ),
-                        const SizedBox(width: 10),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.edit,
-                            color: Colors.black87,
-                          ),
+                        const SizedBox(width: 20),
+                        Text(
+                          'Added on: $formattedDate',
+                          style: smallSubtitleText,
                         ),
                       ],
                     ),

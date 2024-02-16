@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -16,7 +15,6 @@ class MovieAddUpdateDialog extends StatefulWidget {
     required this.buttonFunctionality,
     required this.movieNameController,
     required this.personalRatingController,
-    required this.imdbRatingController,
     required this.movieDescriptionController,
     required this.onCancel,
     this.imageUrl,
@@ -28,24 +26,21 @@ class MovieAddUpdateDialog extends StatefulWidget {
     this.onUpdateMovie,
     this.onImageUrlChanged,
   });
-
   final ButtonFunctionality buttonFunctionality;
   final TextEditingController movieNameController;
   final TextEditingController personalRatingController;
-  final TextEditingController imdbRatingController;
   final TextEditingController movieDescriptionController;
   final VoidCallback onCancel;
 
   String? imageUrl;
   final String? movieName;
   final double? personalRating;
-  final double? imdbRating;
+  final String? imdbRating;
   final String? movieDescription;
 
   final VoidCallback? onAddMovie;
   final VoidCallback? onUpdateMovie;
   final Function(String)? onImageUrlChanged;
-
   @override
   State<MovieAddUpdateDialog> createState() => _MovieAddUpdateDialogState();
 }
@@ -53,16 +48,13 @@ class MovieAddUpdateDialog extends StatefulWidget {
 class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
   String? _imageUrl;
   String? _updatedImageUrl;
-
   final ImagePicker _imagePicker = ImagePicker();
   bool isImageChanged = false;
   bool isLoading = false;
   final storageRef = FirebaseStorage.instance.ref();
-
   Future getImageFromGallery() async {
     final pickedImage =
         await _imagePicker.pickImage(source: ImageSource.gallery);
-
     if (pickedImage != null) {
       isImageChanged = true;
       setState(() {
@@ -104,7 +96,6 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
       widget.movieNameController.text = widget.movieName!;
       widget.movieDescriptionController.text = widget.movieDescription!;
       widget.personalRatingController.text = widget.personalRating!.toString();
-      widget.imdbRatingController.text = widget.imdbRating!.toString();
     }
     return AlertDialog(
       backgroundColor: MyColors.appBgColor,
@@ -123,32 +114,13 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
                 hintStyle: TextStyle(fontSize: 12),
               ),
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: widget.personalRatingController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "PERSONAL RATING",
-                      hintStyle: TextStyle(fontSize: 12),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: TextField(
-                    controller: widget.imdbRatingController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "IMDB RATING",
-                      hintStyle: TextStyle(fontSize: 12),
-                    ),
-                  ),
-                ),
-              ],
+            TextField(
+              controller: widget.personalRatingController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: "PERSONAL RATING",
+                hintStyle: TextStyle(fontSize: 12),
+              ),
             ),
             TextField(
               controller: widget.movieDescriptionController,

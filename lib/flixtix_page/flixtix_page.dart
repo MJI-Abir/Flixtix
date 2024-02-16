@@ -8,7 +8,6 @@ import 'package:moviflix/widgets/movies_list_tile.dart';
 
 class FlixtixPage extends StatefulWidget {
   const FlixtixPage({super.key});
-
   @override
   State<FlixtixPage> createState() => _FlixtixPageState();
 }
@@ -17,11 +16,9 @@ class _FlixtixPageState extends State<FlixtixPage> {
   String _imageUrl = "";
   final _movieNameController = TextEditingController();
   final _personalRatingController = TextEditingController();
-  final _imdbRatingController = TextEditingController();
   final _movieDescriptionController = TextEditingController();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
   void openMovieAdditionDialog() {
     showDialog(
       context: context,
@@ -30,7 +27,6 @@ class _FlixtixPageState extends State<FlixtixPage> {
           buttonFunctionality: ButtonFunctionality.add,
           movieNameController: _movieNameController,
           personalRatingController: _personalRatingController,
-          imdbRatingController: _imdbRatingController,
           movieDescriptionController: _movieDescriptionController,
           onImageUrlChanged: (imageUrl) {
             _imageUrl = imageUrl;
@@ -38,7 +34,6 @@ class _FlixtixPageState extends State<FlixtixPage> {
           onCancel: () {
             _movieNameController.clear();
             _personalRatingController.clear();
-            _imdbRatingController.clear();
             _movieDescriptionController.clear();
             Navigator.of(context).pop();
           },
@@ -49,7 +44,6 @@ class _FlixtixPageState extends State<FlixtixPage> {
               _imageUrl,
               _movieNameController,
               _personalRatingController,
-              _imdbRatingController,
               _movieDescriptionController,
             );
           },
@@ -62,7 +56,6 @@ class _FlixtixPageState extends State<FlixtixPage> {
     String movieId,
     String movieName,
     double personalRating,
-    double imdbRating,
     String movieDescription,
     String imageUrl,
   ) {
@@ -74,12 +67,10 @@ class _FlixtixPageState extends State<FlixtixPage> {
           buttonFunctionality: ButtonFunctionality.update,
           movieName: movieName,
           personalRating: personalRating,
-          imdbRating: imdbRating,
           movieDescription: movieDescription,
           imageUrl: imageUrl,
           movieNameController: _movieNameController,
           personalRatingController: _personalRatingController,
-          imdbRatingController: _imdbRatingController,
           movieDescriptionController: _movieDescriptionController,
           onImageUrlChanged: (imageUrl) {
             _imageUrl = imageUrl;
@@ -87,7 +78,6 @@ class _FlixtixPageState extends State<FlixtixPage> {
           onCancel: () {
             _movieNameController.clear();
             _personalRatingController.clear();
-            _imdbRatingController.clear();
             _movieDescriptionController.clear();
             Navigator.of(context).pop();
           },
@@ -97,7 +87,6 @@ class _FlixtixPageState extends State<FlixtixPage> {
               _firestore,
               _movieNameController,
               _personalRatingController,
-              _imdbRatingController,
               _movieDescriptionController,
               _imageUrl,
               movieId,
@@ -131,7 +120,6 @@ class _FlixtixPageState extends State<FlixtixPage> {
               QuerySnapshot<Map<String, dynamic>>? querySnapshot =
                   snapshot.data;
               List<QueryDocumentSnapshot> document = querySnapshot!.docs;
-
               // We need to Convert your documents to Maps to display
               List<Map> movies = document.map((e) => e.data() as Map).toList();
               return ListView.builder(
@@ -144,6 +132,7 @@ class _FlixtixPageState extends State<FlixtixPage> {
                     personalRating: thisMovie['personalRating'],
                     imdbRating: thisMovie['imdbRating'],
                     imgPath: thisMovie['imageUrl'],
+                    timestamp: thisMovie['timestamp'],
                     onDelete: (context) => MovieController.deleteMovie(
                       context,
                       _firestore,
@@ -153,7 +142,6 @@ class _FlixtixPageState extends State<FlixtixPage> {
                       thisMovie['id'],
                       thisMovie['movieName'],
                       thisMovie['personalRating'],
-                      thisMovie['imdbRating'],
                       thisMovie['movieDescription'],
                       thisMovie['imageUrl'],
                     ),

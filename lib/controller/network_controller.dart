@@ -30,7 +30,7 @@ class NetworkController extends GetxController {
           size: 35,
         ),
         margin: EdgeInsets.zero,
-        snackStyle: SnackStyle.GROUNDED,
+        snackStyle: SnackStyle.FLOATING,
       );
     } else{
       if(Get.isSnackbarOpen){
