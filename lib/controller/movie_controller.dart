@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 
 class MovieController {
   static String _imdbRating = "";
+  
   static Future<void> _getImdbRating(String movieName) async {
     const String apiKey = Config.apiKey;
 
