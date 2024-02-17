@@ -1,4 +1,5 @@
 import "package:cloud_firestore/cloud_firestore.dart";
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_spinkit/flutter_spinkit.dart";
 import "package:moviflix/utils/commons.dart";
@@ -24,6 +25,7 @@ class _CustomDialogBoxWithTextFieldState
     extends State<CustomDialogBoxWithTextField> {
   bool isLoading = false;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   void saveNewTask(
       BuildContext context, TextEditingController taskNameController) async {
@@ -37,6 +39,7 @@ class _CustomDialogBoxWithTextFieldState
         'taskName': taskName,
         'isCompleted': false,
         'timestamp': now,
+        'userId': _auth.currentUser!.uid,
       },
     );
     String taskId = docRef.id;

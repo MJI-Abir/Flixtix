@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/widgets/custom_alert_dialog.dart';
@@ -16,6 +17,7 @@ class TodoPage extends StatefulWidget {
 class _TodoPageState extends State<TodoPage> {
   final _taskNameController = TextEditingController();
   final _firestore = FirebaseFirestore.instance;
+  final _auth = FirebaseAuth.instance;
 
   void openDialogBox() {
     showDialog(
@@ -46,6 +48,8 @@ class _TodoPageState extends State<TodoPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('current user: ${_auth.currentUser!.uid}');
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -60,7 +64,12 @@ class _TodoPageState extends State<TodoPage> {
       ),
       backgroundColor: MyColors.appBgColor,
       body: StreamBuilder<QuerySnapshot>(
-        stream: _firestore.collection('tasks').orderBy('timestamp').snapshots(),
+        stream: _firestore
+            .collection('tasks')
+            .orderBy('timestamp')
+            .where('userId', isEqualTo: _auth.currentUser!.uid)
+            .snapshots(),
+        // stream: _firestore.collection('tasks').orderBy('timestamp').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView(

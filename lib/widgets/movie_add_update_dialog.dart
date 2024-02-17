@@ -135,18 +135,28 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
               children: [
                 _imageUrl == null
                     ? const Text('No image selected')
-                    : CircleAvatar(
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(40),
                         child: widget.buttonFunctionality ==
                                 ButtonFunctionality.update
                             ? !isImageChanged
                                 ? Image.network(
                                     _imageUrl!,
+                                    fit: BoxFit.cover,
+                                    width: 80,
+                                    height: 80,
                                   )
                                 : Image.file(
                                     File(_imageUrl!),
+                                    fit: BoxFit.cover,
+                                    width: 80,
+                                    height: 80,
                                   )
                             : Image.file(
                                 File(_imageUrl!),
+                                fit: BoxFit.cover,
+                                width: 80,
+                                height: 80,
                               ),
                       ),
                 IconButton(

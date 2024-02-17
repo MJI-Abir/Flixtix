@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:moviflix/config/config.dart';
@@ -9,7 +10,8 @@ import 'package:http/http.dart' as http;
 
 class MovieController {
   static String _imdbRating = "";
-  
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
+
   static Future<void> _getImdbRating(String movieName) async {
     const String apiKey = Config.apiKey;
 
@@ -52,7 +54,7 @@ class MovieController {
     double personalRating = double.parse(personalRatingController.text);
     String movieDescription = movieDescriptionController.text;
     DateTime now = DateTime.now();
-    
+
     DocumentReference documentReference =
         await firestore.collection('movies').add({
       'movieName': movieName,
@@ -62,6 +64,7 @@ class MovieController {
       'isFavorite': false,
       'imageUrl': imageUrl,
       'timestamp': now,
+      'userId': _auth.currentUser!.uid,
     });
     String movieId = documentReference.id;
     await firestore
@@ -135,6 +138,9 @@ class MovieController {
         .catchError(
           (error) => showToast(message: 'Failed: $error'),
         );
+    movieNameController.clear();
+    personalRatingController.clear();
+    movieDescriptionController.clear();
     Navigator.of(context).pop();
   }
 }

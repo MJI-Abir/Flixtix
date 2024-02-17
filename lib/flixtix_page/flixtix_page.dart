@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:moviflix/enums/enums.dart';
 import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/widgets/movie_add_update_dialog.dart';
@@ -17,6 +19,7 @@ class _FlixtixPageState extends State<FlixtixPage> {
   final _movieNameController = TextEditingController();
   final _personalRatingController = TextEditingController();
   final _movieDescriptionController = TextEditingController();
+  final _auth = FirebaseAuth.instance;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   void openMovieAdditionDialog() {
@@ -113,8 +116,11 @@ class _FlixtixPageState extends State<FlixtixPage> {
       ),
       backgroundColor: MyColors.appBgColor,
       body: StreamBuilder(
-          stream:
-              _firestore.collection('movies').orderBy('timestamp').snapshots(),
+          stream: _firestore
+              .collection('movies')
+              .where('userId', isEqualTo: _auth.currentUser!.uid)
+              .orderBy('timestamp')
+              .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               QuerySnapshot<Map<String, dynamic>>? querySnapshot =
@@ -122,6 +128,31 @@ class _FlixtixPageState extends State<FlixtixPage> {
               List<QueryDocumentSnapshot> document = querySnapshot!.docs;
               // We need to Convert your documents to Maps to display
               List<Map> movies = document.map((e) => e.data() as Map).toList();
+              if (movies.isEmpty) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'You have not added any movies yet!😔',
+                      style: GoogleFonts.aBeeZee(
+                        textStyle: const TextStyle(
+                          fontSize: 24,
+                        ),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Image.asset(
+                        'assets/images/sad_kitty.jpg',
+                        fit: BoxFit.cover,
+                        width: 100,
+                        height: 100,
+                      ),
+                    ),
+                  ],
+                );
+              }
               return ListView.builder(
                 itemCount: movies.length,
                 itemBuilder: (context, index) {
