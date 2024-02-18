@@ -6,6 +6,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:moviflix/auth/login.dart';
 import 'package:moviflix/dependency_injection.dart';
 import 'package:moviflix/home_page/home_screen.dart';
+import 'package:moviflix/utils/routes.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -14,22 +15,8 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await FirebaseAppCheck.instance.activate(
-    // Default provider for Android is the Play Integrity provider. You can use the "AndroidProvider" enum to choose
-    // your preferred provider. Choose from:
-    // 1. Debug provider
-    // 2. Safety Net provider
-    // 3. Play Integrity provider
     androidProvider: AndroidProvider.debug,
-    // Default provider for iOS/macOS is the Device Check provider. You can use the "AppleProvider" enum to choose
-    // your preferred provider. Choose from:
-    // 1. Debug provider
-    // 2. Device Check provider
-    // 3. App Attest provider
-    // 4. App Attest provider with fallback to Device Check provider (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
-    // appleProvider: AppleProvider.appAttest,
   );
-  FirebaseAppCheck.instance
-      .getToken().then((value) => print("APP CHECK: $value"));
   runApp(const MainApp());
   DependencyInjection.init();
 }
@@ -42,11 +29,13 @@ class MainApp extends StatelessWidget {
     FirebaseAuth auth = FirebaseAuth.instance;
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: auth.currentUser == null ? const LoginPage() : const HomeScreen(),
+      initialRoute: AppRoutes.loginPage,
+      // auth.currentUser == null ? AppRoutes.loginPage : AppRoutes.homePage,
       theme: ThemeData(
         primaryColor: Colors.yellow,
         useMaterial3: true,
       ),
+      routes: AppRoutes.routes,
     );
   }
 }

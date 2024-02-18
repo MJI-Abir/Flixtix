@@ -7,6 +7,7 @@ import 'package:moviflix/enums/enums.dart';
 import 'package:moviflix/utils/commons.dart';
 import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/widgets/custom_material_button.dart';
+import 'package:moviflix/widgets/custom_text_field.dart';
 
 // ignore: must_be_immutable
 class MovieAddUpdateDialog extends StatefulWidget {
@@ -105,30 +106,17 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            TextField(
-              autofocus: true,
+            CustomTextField(
               controller: widget.movieNameController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: "MOVIE NAME",
-                hintStyle: TextStyle(fontSize: 12),
-              ),
+              labelText: 'MOVIE NAME',
             ),
-            TextField(
+            CustomTextField(
               controller: widget.personalRatingController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: "PERSONAL RATING",
-                hintStyle: TextStyle(fontSize: 12),
-              ),
+              labelText: 'PERSONAL RATING',
             ),
-            TextField(
+            CustomTextField(
               controller: widget.movieDescriptionController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: "DESCRIPTION",
-                hintStyle: TextStyle(fontSize: 12),
-              ),
+              labelText: 'DESCRIPTION',
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -136,27 +124,27 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
                 _imageUrl == null
                     ? const Text('No image selected')
                     : ClipRRect(
-                        borderRadius: BorderRadius.circular(40),
+                        borderRadius: BorderRadius.circular(35),
                         child: widget.buttonFunctionality ==
                                 ButtonFunctionality.update
                             ? !isImageChanged
                                 ? Image.network(
                                     _imageUrl!,
                                     fit: BoxFit.cover,
-                                    width: 80,
-                                    height: 80,
+                                    width: 70,
+                                    height: 70,
                                   )
                                 : Image.file(
                                     File(_imageUrl!),
                                     fit: BoxFit.cover,
-                                    width: 80,
-                                    height: 80,
+                                    width: 70,
+                                    height: 70,
                                   )
                             : Image.file(
                                 File(_imageUrl!),
                                 fit: BoxFit.cover,
-                                width: 80,
-                                height: 80,
+                                width: 70,
+                                height: 70,
                               ),
                       ),
                 IconButton(

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:moviflix/config/config.dart';
 import 'package:moviflix/widgets/custom_material_button.dart';
@@ -14,6 +15,11 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final _movieNameController = TextEditingController();
   String _imdbRating = "";
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
+  void signOut() async {
+    await auth.signOut();
+  }
 
   Future<void> _getImdbRating() async {
     const String apiKey = Config.apiKey; // Replace with your actual API key
@@ -67,7 +73,13 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           Text('IMDB Rating: $_imdbRating'),
           CustomMaterialButton(
-              text: "GET IMDB RATING", onPressed: _getImdbRating),
+            text: "GET IMDB RATING",
+            onPressed: _getImdbRating,
+          ),
+          CustomMaterialButton(
+            onPressed: signOut,
+            text: 'Sign Out',
+          ),
         ],
       ),
     );
