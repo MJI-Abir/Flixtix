@@ -48,7 +48,6 @@ class _TodoPageState extends State<TodoPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -59,9 +58,9 @@ class _TodoPageState extends State<TodoPage> {
           ),
         ),
         elevation: 0,
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: MyColors.pasteColorLight,
       ),
-      backgroundColor: MyColors.appBgColor,
+      backgroundColor: Colors.white,
       body: StreamBuilder<QuerySnapshot>(
         stream: _firestore
             .collection('tasks')
@@ -103,7 +102,7 @@ class _TodoPageState extends State<TodoPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: MyColors.pasteColorLight,
         shape: const CircleBorder(),
         onPressed: openDialogBox,
         child: const Icon(Icons.add),

@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:moviflix/utils/my_colors.dart";
 
 // ignore: must_be_immutable
 class CustomMaterialButton extends StatelessWidget {
@@ -16,10 +17,11 @@ class CustomMaterialButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: MyColors.pasteColorLight,
         shape: BeveledRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
+        elevation: 2,
       ),
       child: Text(
         text,

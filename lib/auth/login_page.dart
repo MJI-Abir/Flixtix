@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moviflix/home_page/home_screen.dart';
 import 'package:moviflix/utils/commons.dart';
+import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/utils/routes.dart';
 import 'package:moviflix/widgets/custom_material_button.dart';
 import 'package:moviflix/widgets/custom_outlined_button.dart';
@@ -27,6 +29,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final _formKey = GlobalKey<FormState>();
   bool passwordObscure = false;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -34,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
     passwordObscure = true;
   }
 
-   bool isValidEmail(String email) {
+  bool isValidEmail(String email) {
     // Use a proper email validation logic, this is a simple example
     return RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$').hasMatch(email);
   }
@@ -47,35 +50,29 @@ class _LoginPageState extends State<LoginPage> {
       showErrorToast(message: 'Password is required');
       return;
     } else if (_passwordController.text.length < 6) {
-      showErrorToast(message: 'Password must be at least 6 characters', );
+      showErrorToast(
+        message: 'Password must be at least 6 characters',
+      );
       return;
-    }else if (!isValidEmail(_emailController.text)) {
+    } else if (!isValidEmail(_emailController.text)) {
       showErrorToast(message: "Invalid email address");
       return;
     }
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
       try {
         await auth
             .signInWithEmailAndPassword(
                 email: _emailController.text,
                 password: _passwordController.text)
-            .whenComplete(
-              () => ScaffoldMessenger.of(context)
-                  .showSnackBar(
-                    const SnackBar(
-                      content: Text("Logged In Successfully"),
-                    ),
-                  )
-                  .closed
-                  .whenComplete(
-                    () => Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HomeScreen(),
-                      ),
-                    ),
+            .whenComplete(() => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HomeScreen(),
                   ),
-            );
+                ));
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           showErrorToast(message: 'No user found for that email.');
@@ -83,23 +80,27 @@ class _LoginPageState extends State<LoginPage> {
           showErrorToast(message: 'Wrong Password');
         }
       }
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MyColors.pasteColorLight,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: MyColors.pasteColorLight,
         toolbarHeight: 4,
       ),
       body: Column(
         children: [
           const Expanded(
             child: LoginBanner(
-              firstLine: 'Sign in to your ',
-              secondLine: 'Account',
+              firstLine: 'Sign in',
+              secondLine: 'Sign in to your Account',
             ),
           ),
           Expanded(
@@ -107,9 +108,10 @@ class _LoginPageState extends State<LoginPage> {
             child: Container(
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
+                  topLeft: Radius.circular(40),
+                  topRight: Radius.circular(40),
                 ),
+                color: Colors.white,
               ),
               child: Form(
                 key: _formKey,
@@ -125,9 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                         prefixIcon: const Icon(Icons.email),
                         textInputType: TextInputType.emailAddress,
                       ),
-                      const SizedBox(
-                        height: 30,
-                      ),
+                      sBoxOfHeight20,
                       CustomTextField(
                         obscureText: passwordObscure,
                         controller: _passwordController,
@@ -145,13 +145,11 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         textInputType: TextInputType.visiblePassword,
                       ),
-                      const SizedBox(
-                        height: 30,
-                      ),
+                      sBoxOfHeight20,
                       TextButton(
                         child: Text(
                           'Forgot Password?',
-                          style: GoogleFonts.arbutus(
+                          style: GoogleFonts.aBeeZee(
                             textStyle: TextStyle(
                               color: Colors.deepPurple[800],
                             ),
@@ -163,11 +161,19 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(
                         height: 30,
                       ),
+                      if (isLoading)
+                        const SpinKitThreeBounce(
+                          color: Colors.black,
+                          size: 20,
+                        ),
                       Row(
                         children: [
                           Expanded(
                             child: CustomMaterialButton(
-                                text: 'Login', onPressed: validateAndSignIn),
+                                text: 'Login',
+                                onPressed: () {
+                                  validateAndSignIn();
+                                }),
                           ),
                         ],
                       ),
@@ -185,6 +191,7 @@ class _LoginPageState extends State<LoginPage> {
                               onPressed: () {},
                               iconData: Icons.facebook,
                               text: 'Google',
+                              svgAssetName: 'icons8-google.svg',
                             ),
                           ),
                           const SizedBox(width: 10),
@@ -193,6 +200,7 @@ class _LoginPageState extends State<LoginPage> {
                               onPressed: () {},
                               iconData: Icons.facebook,
                               text: 'Facebook',
+                              svgAssetName: 'icons8-facebook.svg',
                             ),
                           )
                         ],

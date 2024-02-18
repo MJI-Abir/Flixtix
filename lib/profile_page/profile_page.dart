@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:moviflix/config/config.dart';
+import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/widgets/custom_material_button.dart';
 import 'package:http/http.dart' as http;
 
@@ -60,6 +61,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MyColors.pasteColorLight,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

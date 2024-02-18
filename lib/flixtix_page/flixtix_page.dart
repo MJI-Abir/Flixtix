@@ -113,9 +113,9 @@ class _FlixtixPageState extends State<FlixtixPage> {
           ),
         ),
         elevation: 0,
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: MyColors.pasteColorLight,
       ),
-      backgroundColor: MyColors.appBgColor,
+      backgroundColor: Colors.white,
       body: StreamBuilder(
           stream: _firestore
               .collection('movies')
@@ -192,7 +192,7 @@ class _FlixtixPageState extends State<FlixtixPage> {
           }),
       floatingActionButton: FloatingActionButton(
         onPressed: openMovieAdditionDialog,
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: MyColors.pasteColorLight,
         shape: const CircleBorder(),
         child: const Icon(Icons.add),
       ),

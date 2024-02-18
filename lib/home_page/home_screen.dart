@@ -31,8 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (user == null) {
         Navigator.of(context)
             .pushNamedAndRemoveUntil(AppRoutes.loginPage, (route) => false);
-      } else {
-      }
+      } else {}
     });
     _bottomNavIndex = 0;
   }
@@ -44,14 +43,14 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: AnimatedBottomNavigationBar(
         icons: Consts.bottomNavIcons,
         activeIndex: _bottomNavIndex,
-        backgroundColor: Colors.black87,
-        rightCornerRadius: 20,
-        leftCornerRadius: 20,
+        backgroundColor: MyColors.pasteColorLight,
+        // rightCornerRadius: 40,
+        // leftCornerRadius: 40,
         gapLocation: GapLocation.none,
-        elevation: 4,
-        height: 70,
-        activeColor: MyColors.appTheme,
-        inactiveColor: Colors.white,
+        elevation: 0,
+        // height: 70,
+        activeColor: Colors.black,
+        inactiveColor: Colors.blueGrey,
         onTap: (index) {
           setState(() {
             _bottomNavIndex = index;

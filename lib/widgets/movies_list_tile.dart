@@ -54,12 +54,13 @@ class MoviesListTile extends StatelessWidget {
         ),
         child: Container(
           decoration: BoxDecoration(
-            color: MyColors.appTheme,
+            
+            color: MyColors.pasteColorDark,
             borderRadius: BorderRadius.circular(20),
             boxShadow: const [
               BoxShadow(
-                color: MyColors.cardShadowColor,
-                blurRadius: 5.0,
+                color: MyColors.pasteShadowColorDark,
+                blurRadius: 2.0,
                 offset: Offset(0, 5), // shadow direction: bottom right
               ),
             ],

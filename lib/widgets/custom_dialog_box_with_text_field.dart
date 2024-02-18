@@ -70,7 +70,7 @@ class _CustomDialogBoxWithTextFieldState
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: MyColors.appBgColor,
+      backgroundColor: MyColors.pasteColorLight,
       content: SizedBox(
         height: 150,
         child: Column(

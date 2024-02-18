@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:moviflix/utils/commons.dart';
 import 'package:moviflix/utils/my_colors.dart';
 
 class LoginBanner extends StatelessWidget {
@@ -15,11 +16,12 @@ class LoginBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      color: MyColors.appTheme,
+      color: MyColors.pasteColorLight,
       child: Padding(
         padding: const EdgeInsets.only(left: 16.0, top: 16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               firstLine,
@@ -30,12 +32,12 @@ class LoginBanner extends StatelessWidget {
                 ),
               ),
             ),
+            sBoxOfHeight20,
             Text(
               secondLine,
-              style: GoogleFonts.robotoCondensed(
+              style: GoogleFonts.aBeeZee(
                 textStyle: const TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
                 ),
               ),
             ),

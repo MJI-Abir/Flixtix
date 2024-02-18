@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:moviflix/home_page/home_screen.dart';
 import 'package:moviflix/utils/commons.dart';
+import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/utils/routes.dart';
 import 'package:moviflix/widgets/custom_material_button.dart';
 import 'package:moviflix/widgets/custom_text_field.dart';
@@ -27,6 +29,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   final _formKey = GlobalKey<FormState>();
   bool passwordObscure = false;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -78,36 +81,42 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
     if (_formKey.currentState!.validate()) {
-      auth
-          .createUserWithEmailAndPassword(
-              email: _emailController.text, password: _passwordController.text)
-          .whenComplete(
-            () => ScaffoldMessenger.of(context)
-                .showSnackBar(
-                  const SnackBar(
-                    content: Text("Successfully Signed Up"),
-                  ),
-                )
-                .closed
-                .whenComplete(
-              () async {
-                await saveUserToFirebase();
-                // ignore: use_build_context_synchronously
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const HomeScreen(),
-                  ),
-                );
-              },
-            ),
-          );
+      try {
+        auth
+            .createUserWithEmailAndPassword(
+                email: _emailController.text,
+                password: _passwordController.text)
+            .whenComplete(
+              () => ScaffoldMessenger.of(context)
+                  .showSnackBar(
+                    const SnackBar(
+                      content: Text("Successfully Signed Up"),
+                    ),
+                  )
+                  .closed
+                  .whenComplete(
+                () async {
+                  await saveUserToFirebase();
+                  // ignore: use_build_context_synchronously
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HomeScreen(),
+                    ),
+                  );
+                },
+              ),
+            );
+      } on FirebaseAuthException catch (e) {
+        showErrorToast(message: '$e');
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MyColors.pasteColorLight,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Theme.of(context).primaryColor,
@@ -126,9 +135,10 @@ class _RegisterPageState extends State<RegisterPage> {
             child: Container(
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
+                  topLeft: Radius.circular(40),
+                  topRight: Radius.circular(40),
                 ),
+                color: Colors.white,
               ),
               child: Form(
                 key: _formKey,
@@ -143,18 +153,14 @@ class _RegisterPageState extends State<RegisterPage> {
                         labelText: 'Username',
                         prefixIcon: const Icon(Icons.person_2_sharp),
                       ),
-                      const SizedBox(
-                        height: 30,
-                      ),
+                      sBoxOfHeight20,
                       CustomTextField(
                         controller: _emailController,
                         labelText: 'Email',
                         prefixIcon: const Icon(Icons.email),
                         textInputType: TextInputType.emailAddress,
                       ),
-                      const SizedBox(
-                        height: 30,
-                      ),
+                      sBoxOfHeight20,
                       CustomTextField(
                         obscureText: passwordObscure,
                         controller: _passwordController,
@@ -172,9 +178,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         textInputType: TextInputType.visiblePassword,
                       ),
-                      const SizedBox(
-                        height: 30,
-                      ),
+                      sBoxOfHeight20,
                       CustomTextField(
                         obscureText: passwordObscure,
                         controller: _passwordConfirmController,
@@ -192,9 +196,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         textInputType: TextInputType.visiblePassword,
                       ),
-                      const SizedBox(
-                        height: 30,
-                      ),
+                      sBoxOfHeight30,
                       Row(
                         children: [
                           Expanded(
@@ -203,13 +205,14 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 30,
-                      ),
+                      sBoxOfHeight30,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text('I have an account  '),
+                          Text(
+                            'I have an account  ',
+                            style: GoogleFonts.aBeeZee(),
+                          ),
                           InkWell(
                             onTap: () {
                               Navigator.popAndPushNamed(
@@ -217,7 +220,11 @@ class _RegisterPageState extends State<RegisterPage> {
                             },
                             child: Text(
                               'Login',
-                              style: TextStyle(color: Colors.deepPurple[800]),
+                              style: GoogleFonts.aBeeZee(
+                                textStyle: TextStyle(
+                                  color: Colors.deepPurple[800],
+                                ),
+                              ),
                             ),
                           )
                         ],

@@ -11,18 +11,13 @@ class TextInBetweenDivider extends StatelessWidget {
     return Row(
       children: [
         const Expanded(
-          flex: 3,
           child: Divider(),
         ),
-        Expanded(
-          flex: 2,
-          child: Text(
-            '  Or login with  ',
-            style: smallSubtitleText,
-          ),
+        Text(
+          '  Or login with  ',
+          style: smallSubtitleText,
         ),
         const Expanded(
-          flex: 3,
           child: Divider(),
         ),
       ],

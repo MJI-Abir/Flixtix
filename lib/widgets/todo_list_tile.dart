@@ -48,12 +48,12 @@ class TodoListTile extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(25),
           decoration: BoxDecoration(
-            color: MyColors.appTheme,
+            color: MyColors.pasteColorDark,
             borderRadius: BorderRadius.circular(20),
             boxShadow: const [
               BoxShadow(
-                color: MyColors.cardShadowColor,
-                blurRadius: 5.0,
+                color: MyColors.pasteShadowColorDark,
+                blurRadius: 2.0,
                 offset: Offset(0, 5), // shadow direction: bottom right
               ),
             ],
@@ -70,6 +70,7 @@ class TodoListTile extends StatelessWidget {
               Text(
                 taskName,
                 style: TextStyle(
+                  color: Colors.black,
                   fontFamily: "PoorStory",
                   fontWeight: FontWeight.w600,
                   fontSize: 20,

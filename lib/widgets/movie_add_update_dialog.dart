@@ -99,7 +99,7 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
       widget.personalRatingController.text = widget.personalRating!.toString();
     }
     return AlertDialog(
-      backgroundColor: MyColors.appBgColor,
+      backgroundColor: MyColors.pasteColorLight,
       content: SizedBox(
         height: 400,
         child: Column(

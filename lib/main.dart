@@ -1,4 +1,5 @@
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -23,12 +24,13 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAuth auth = FirebaseAuth.instance;
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.loginPage,
-      // auth.currentUser == null ? AppRoutes.loginPage : AppRoutes.homePage,
+      initialRoute:
+          auth.currentUser == null ? AppRoutes.loginPage : AppRoutes.homePage,
       theme: ThemeData(
-        primaryColor: Colors.yellow,
+        primaryColor: Colors.white,
         useMaterial3: true,
       ),
       routes: AppRoutes.routes,
