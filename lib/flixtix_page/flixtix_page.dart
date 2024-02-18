@@ -22,6 +22,7 @@ class _FlixtixPageState extends State<FlixtixPage> {
   final _auth = FirebaseAuth.instance;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   void openMovieAdditionDialog() {
     showDialog(
       context: context,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:moviflix/auth/login.dart';
+import 'package:moviflix/auth/login_page.dart';
 import 'package:moviflix/auth/register_page.dart';
 import 'package:moviflix/flixtix_page/flixtix_page.dart';
 import 'package:moviflix/home_page/home_screen.dart';

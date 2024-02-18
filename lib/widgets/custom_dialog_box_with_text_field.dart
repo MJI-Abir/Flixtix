@@ -55,7 +55,7 @@ class _CustomDialogBoxWithTextFieldState
           ),
         )
         .catchError(
-          (error) => showToast(
+          (error) => showErrorToast(
             message: "Failed: $error",
           ),
         );
@@ -81,7 +81,7 @@ class _CustomDialogBoxWithTextFieldState
               controller: widget.taskNameController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                hintText: "Add a new task",
+                labelText: "Add a new task",
               ),
             ),
             if (isLoading)

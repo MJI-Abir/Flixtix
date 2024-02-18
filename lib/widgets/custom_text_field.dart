@@ -10,6 +10,7 @@ class CustomTextField extends StatelessWidget {
     this.suffixIcon,
     this.textInputType,
     this.obscureText,
+    this.fontSize,
   });
 
   final TextEditingController controller;
@@ -19,6 +20,7 @@ class CustomTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final TextInputType? textInputType;
   final bool? obscureText;
+  final double? fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,7 @@ class CustomTextField extends StatelessWidget {
       autofocus: autofocus ?? false,
       decoration: InputDecoration(
         labelText: labelText,
+        labelStyle: TextStyle(fontSize: fontSize),
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
         prefixIconColor: Colors.black,

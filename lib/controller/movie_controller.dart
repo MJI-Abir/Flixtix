@@ -29,14 +29,11 @@ class MovieController {
       final Map<String, dynamic> data = json.decode(response.body);
 
       if (data['Response'] == 'True') {
-        // Movie found, extract IMDb rating
         _imdbRating = data['imdbRating'];
       } else {
-        // Movie not found, handle accordingly
         _imdbRating = "Not found";
       }
     } else {
-      // Error in the API request, handle accordingly
       _imdbRating = "Error";
     }
   }
@@ -77,7 +74,7 @@ class MovieController {
           (_) => showToast(message: 'Movie Added'),
         )
         .catchError(
-          (error) => showToast(message: 'Failed : $error'),
+          (error) => showErrorToast(message: 'Failed : $error'),
         );
     movieNameController.clear();
     personalRatingController.clear();
@@ -102,7 +99,7 @@ class MovieController {
             (_) => showToast(message: 'Movie Deleted'),
           );
     } catch (error) {
-      showToast(
+      showErrorToast(
         message: "Failed: $error",
       );
     }
@@ -136,7 +133,7 @@ class MovieController {
           (_) => showToast(message: "Movie Updated"),
         )
         .catchError(
-          (error) => showToast(message: 'Failed: $error'),
+          (error) => showErrorToast(message: 'Failed: $error'),
         );
     movieNameController.clear();
     personalRatingController.clear();

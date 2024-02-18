@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moviflix/home_page/home_screen.dart';
 import 'package:moviflix/utils/commons.dart';
-import 'package:moviflix/utils/my_colors.dart';
+import 'package:moviflix/utils/routes.dart';
 import 'package:moviflix/widgets/custom_material_button.dart';
+import 'package:moviflix/widgets/custom_outlined_button.dart';
 import 'package:moviflix/widgets/custom_text_field.dart';
+import 'package:moviflix/widgets/login_banner.dart';
+import 'package:moviflix/widgets/text_in_between_divider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -22,7 +24,6 @@ class _LoginPageState extends State<LoginPage> {
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
   bool passwordObscure = false;
@@ -33,25 +34,25 @@ class _LoginPageState extends State<LoginPage> {
     passwordObscure = true;
   }
 
-  Future saveUserToFirebase() async {
-    String email = _emailController.text;
-    String username = _usernameController.text;
-
-    DocumentReference documentReference =
-        await firestore.collection('users').add({
-      'email': email,
-      'username': username,
-    });
-    String userId = documentReference.id;
-    await firestore
-        .collection('users')
-        .doc(userId)
-        .update({'id': userId}).catchError(
-      (error) => showToast(message: 'Failed: $error'),
-    );
+   bool isValidEmail(String email) {
+    // Use a proper email validation logic, this is a simple example
+    return RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$').hasMatch(email);
   }
 
-  void signIn() async {
+  void validateAndSignIn() async {
+    if (_emailController.text.isEmpty) {
+      showErrorToast(message: 'Email is required');
+      return;
+    } else if (_passwordController.text.isEmpty) {
+      showErrorToast(message: 'Password is required');
+      return;
+    } else if (_passwordController.text.length < 6) {
+      showErrorToast(message: 'Password must be at least 6 characters', );
+      return;
+    }else if (!isValidEmail(_emailController.text)) {
+      showErrorToast(message: "Invalid email address");
+      return;
+    }
     if (_formKey.currentState!.validate()) {
       try {
         await auth
@@ -77,40 +78,11 @@ class _LoginPageState extends State<LoginPage> {
             );
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
-          showToast(message: 'No user found for that email.');
+          showErrorToast(message: 'No user found for that email.');
         } else if (e.code == 'wrong-password') {
-          showToast(message: 'Wrong Password');
+          showErrorToast(message: 'Wrong Password');
         }
       }
-    }
-  }
-
-  void signUp() {
-    if (_formKey.currentState!.validate()) {
-      auth
-          .createUserWithEmailAndPassword(
-              email: _emailController.text, password: _passwordController.text)
-          .whenComplete(
-            () => ScaffoldMessenger.of(context)
-                .showSnackBar(
-                  const SnackBar(
-                    content: Text("Successfully Signed Up"),
-                  ),
-                )
-                .closed
-                .whenComplete(
-              () async {
-                await saveUserToFirebase();
-                // ignore: use_build_context_synchronously
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const HomeScreen(),
-                  ),
-                );
-              },
-            ),
-          );
     }
   }
 
@@ -124,36 +96,10 @@ class _LoginPageState extends State<LoginPage> {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              color: MyColors.appTheme,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 16.0, top: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Sign in to your',
-                      style: GoogleFonts.robotoCondensed(
-                        textStyle: const TextStyle(
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      'Account',
-                      style: GoogleFonts.robotoCondensed(
-                        textStyle: const TextStyle(
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+          const Expanded(
+            child: LoginBanner(
+              firstLine: 'Sign in to your ',
+              secondLine: 'Account',
             ),
           ),
           Expanded(
@@ -206,7 +152,9 @@ class _LoginPageState extends State<LoginPage> {
                         child: Text(
                           'Forgot Password?',
                           style: GoogleFonts.arbutus(
-                            textStyle: TextStyle(color: Colors.deepPurple[800]),
+                            textStyle: TextStyle(
+                              color: Colors.deepPurple[800],
+                            ),
                           ),
                           textAlign: TextAlign.end,
                         ),
@@ -219,66 +167,32 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           Expanded(
                             child: CustomMaterialButton(
-                                text: 'Login', onPressed: signIn),
+                                text: 'Login', onPressed: validateAndSignIn),
                           ),
                         ],
                       ),
                       const SizedBox(
                         height: 30,
                       ),
-                      Row(
-                        children: [
-                          const Expanded(
-                            flex: 3,
-                            child: Divider(),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Text(
-                              '  Or login with  ',
-                              style: smallSubtitleText,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 3,
-                            child: Divider(),
-                          ),
-                        ],
-                      ),
+                      const TextInBetweenDivider(),
                       const SizedBox(
                         height: 30,
                       ),
                       Row(
                         children: [
                           Expanded(
-                            child: OutlinedButton(
+                            child: CustomOutlinedButton(
                               onPressed: () {},
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.facebook),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text('Google'),
-                                ],
-                              ),
+                              iconData: Icons.facebook,
+                              text: 'Google',
                             ),
                           ),
                           const SizedBox(width: 10),
                           Expanded(
-                            child: OutlinedButton(
+                            child: CustomOutlinedButton(
                               onPressed: () {},
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.facebook),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text('Facebook'),
-                                ],
-                              ),
+                              iconData: Icons.facebook,
+                              text: 'Facebook',
                             ),
                           )
                         ],
@@ -286,20 +200,21 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(
                         height: 30,
                       ),
-                      Text.rich(
-                        TextSpan(
-                          text: 'Don\'t have an account?  ',
-                          children: [
-                            TextSpan(
-                              text: 'Register',
-                              style: TextStyle(
-                                color: Colors.deepPurple[800],
-                              ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          const Text('Don\'t have an account?  '),
+                          InkWell(
+                            onTap: () {
+                              Navigator.popAndPushNamed(
+                                  context, AppRoutes.registerPage);
+                            },
+                            child: Text(
+                              'Register',
+                              style: TextStyle(color: Colors.deepPurple[800]),
                             ),
-                          ],
-                          recognizer: TapGestureRecognizer()..onTap = () {},
-                        ),
-                        textAlign: TextAlign.end,
+                          )
+                        ],
                       ),
                     ],
                   ),

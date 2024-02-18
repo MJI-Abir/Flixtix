@@ -79,7 +79,7 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
         onSaveMovie();
       });
     } catch (e) {
-      showToast(message: "$e");
+      showErrorToast(message: "$e");
     }
     setState(() {
       isLoading = false;
@@ -101,22 +101,26 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
     return AlertDialog(
       backgroundColor: MyColors.appBgColor,
       content: SizedBox(
-        height: 350,
+        height: 400,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             CustomTextField(
+              autofocus: true,
               controller: widget.movieNameController,
               labelText: 'MOVIE NAME',
+              fontSize: 12,
             ),
             CustomTextField(
               controller: widget.personalRatingController,
               labelText: 'PERSONAL RATING',
+              fontSize: 12,
             ),
             CustomTextField(
               controller: widget.movieDescriptionController,
               labelText: 'DESCRIPTION',
+              fontSize: 12,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

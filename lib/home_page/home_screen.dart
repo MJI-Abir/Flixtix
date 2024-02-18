@@ -31,9 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (user == null) {
         Navigator.of(context)
             .pushNamedAndRemoveUntil(AppRoutes.loginPage, (route) => false);
-        print('User is currently signed out!');
       } else {
-        print('User is signed in!');
       }
     });
     _bottomNavIndex = 0;

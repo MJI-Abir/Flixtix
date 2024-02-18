@@ -48,7 +48,6 @@ class _TodoPageState extends State<TodoPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('current user: ${_auth.currentUser!.uid}');
 
     return Scaffold(
       appBar: AppBar(
