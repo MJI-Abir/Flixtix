@@ -22,7 +22,7 @@ class TodoListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding:
-          const EdgeInsets.only(left: 25.0, right: 25, top: 12.5, bottom: 12.5),
+          const EdgeInsets.only(left: 25.0, right: 25, top: 10, bottom: 10),
       child: Slidable(
         endActionPane: ActionPane(
           motion: const DrawerMotion(),
@@ -48,11 +48,11 @@ class TodoListTile extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(25),
           decoration: BoxDecoration(
-            color: MyColors.pasteColorDark,
+            color: MyColors.pasteColorLight,
             borderRadius: BorderRadius.circular(20),
             boxShadow: const [
               BoxShadow(
-                color: MyColors.pasteShadowColorDark,
+                color: MyColors.pasteColorLight,
                 blurRadius: 2.0,
                 offset: Offset(0, 5), // shadow direction: bottom right
               ),

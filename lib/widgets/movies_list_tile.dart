@@ -31,7 +31,8 @@ class MoviesListTile extends StatelessWidget {
     var formattedDate =
         '${timestamp.toDate().day}-${timestamp.toDate().month}-${timestamp.toDate().year}';
     return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+      padding:
+          const EdgeInsets.only(left: 20, right: 20, top: 7.5, bottom: 7.5),
       child: Slidable(
         endActionPane: ActionPane(
           motion: const DrawerMotion(),
@@ -54,12 +55,11 @@ class MoviesListTile extends StatelessWidget {
         ),
         child: Container(
           decoration: BoxDecoration(
-            
-            color: MyColors.pasteColorDark,
+            color: MyColors.pasteColorLight,
             borderRadius: BorderRadius.circular(20),
             boxShadow: const [
               BoxShadow(
-                color: MyColors.pasteShadowColorDark,
+                color: MyColors.pasteColorLight,
                 blurRadius: 2.0,
                 offset: Offset(0, 5), // shadow direction: bottom right
               ),
