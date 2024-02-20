@@ -58,7 +58,7 @@ class _TodoPageState extends State<TodoPage> {
           ),
         ),
         elevation: 0,
-        backgroundColor: MyColors.pasteColorLight,
+        backgroundColor: MyColors.offWhiteLight,
       ),
       backgroundColor: Colors.white,
       body: StreamBuilder<QuerySnapshot>(
@@ -102,10 +102,13 @@ class _TodoPageState extends State<TodoPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: MyColors.pasteColorLight,
+        backgroundColor: MyColors.greyLight,
         shape: const CircleBorder(),
         onPressed: openDialogBox,
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          color: MyColors.offWhiteLight,
+        ),
       ),
     );
   }

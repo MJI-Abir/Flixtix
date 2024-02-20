@@ -99,7 +99,7 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
       widget.personalRatingController.text = widget.personalRating!.toString();
     }
     return AlertDialog(
-      backgroundColor: MyColors.pasteColorLight,
+      backgroundColor: MyColors.offWhiteLight,
       content: SizedBox(
         height: 400,
         child: Column(
@@ -156,7 +156,7 @@ class _MovieAddUpdateDialogState extends State<MovieAddUpdateDialog> {
                   onPressed: getImageFromGallery,
                   icon: const Icon(
                     Icons.add_a_photo,
-                    color: Colors.deepPurple,
+                    color: MyColors.greyLight,
                   ),
                 ),
               ],

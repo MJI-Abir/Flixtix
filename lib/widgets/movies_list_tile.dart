@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:moviflix/utils/commons.dart';
 import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/widgets/rating_widget.dart';
@@ -15,6 +16,7 @@ class MoviesListTile extends StatelessWidget {
     required this.imgPath,
     required this.onDelete,
     required this.onEditPressed,
+    required this.onSeeDetailsPressed,
     required this.timestamp,
   });
   final String movieName;
@@ -26,6 +28,7 @@ class MoviesListTile extends StatelessWidget {
 
   final Function(BuildContext)? onDelete;
   final Function(BuildContext)? onEditPressed;
+  final VoidCallback onSeeDetailsPressed;
   @override
   Widget build(BuildContext context) {
     var formattedDate =
@@ -40,7 +43,7 @@ class MoviesListTile extends StatelessWidget {
             SlidableAction(
               onPressed: onEditPressed,
               icon: Icons.edit,
-              backgroundColor: Colors.grey,
+              backgroundColor: MyColors.greyLight,
               foregroundColor: Colors.white,
               borderRadius: BorderRadius.circular(12),
             ),
@@ -55,11 +58,11 @@ class MoviesListTile extends StatelessWidget {
         ),
         child: Container(
           decoration: BoxDecoration(
-            color: MyColors.pasteColorLight,
+            color: MyColors.offWhiteLight,
             borderRadius: BorderRadius.circular(20),
             boxShadow: const [
               BoxShadow(
-                color: MyColors.pasteColorLight,
+                color: MyColors.offWhiteLight,
                 blurRadius: 2.0,
                 offset: Offset(0, 5), // shadow direction: bottom right
               ),
@@ -85,12 +88,25 @@ class MoviesListTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      movieName,
-                      style: const TextStyle(
-                        fontFamily: 'SingleDay',
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.white,
+                      ),
+                      padding: const EdgeInsets.only(
+                        left: 6,
+                        right: 6,
+                        top: 4,
+                        bottom: 4,
+                      ),
+                      child: Text(
+                        movieName,
+                        style: GoogleFonts.robotoCondensed(
+                          textStyle: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(
@@ -134,8 +150,8 @@ class MoviesListTile extends StatelessWidget {
                 ),
               ),
               IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.more_vert),
+                onPressed: onSeeDetailsPressed,
+                icon: const Icon(Icons.report_gmailerrorred),
               ),
             ],
           ),
@@ -143,4 +159,5 @@ class MoviesListTile extends StatelessWidget {
       ),
     );
   }
+
 }

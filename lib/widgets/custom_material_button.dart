@@ -17,15 +17,15 @@ class CustomMaterialButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: MyColors.pasteColorLight,
-        shape: BeveledRectangleBorder(
+        backgroundColor: MyColors.greyLight,
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
         elevation: 2,
       ),
       child: Text(
         text,
-        style: const TextStyle(color: Colors.black),
+        style: const TextStyle(color: MyColors.offWhiteLight),
       ),
     );
   }

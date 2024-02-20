@@ -89,10 +89,10 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MyColors.pasteColorLight,
+      backgroundColor: MyColors.offWhiteLight,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: MyColors.pasteColorLight,
+        backgroundColor: MyColors.offWhiteLight,
         toolbarHeight: 4,
       ),
       body: Column(
@@ -106,10 +106,14 @@ class _LoginPageState extends State<LoginPage> {
           Expanded(
             flex: 3,
             child: Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(40),
                   topRight: Radius.circular(40),
+                ),
+                border: Border.all(
+                  color: MyColors.greyLight,
+                  width: 0.001,
                 ),
                 color: Colors.white,
               ),

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moviflix/enums/enums.dart';
+import 'package:moviflix/utils/commons.dart';
 import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/widgets/movie_add_update_dialog.dart';
 import 'package:moviflix/controller/movie_controller.dart';
@@ -113,7 +114,7 @@ class _FlixtixPageState extends State<FlixtixPage> {
           ),
         ),
         elevation: 0,
-        backgroundColor: MyColors.pasteColorLight,
+        backgroundColor: MyColors.offWhiteLight,
       ),
       backgroundColor: Colors.white,
       body: StreamBuilder(
@@ -134,7 +135,7 @@ class _FlixtixPageState extends State<FlixtixPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'You have not added any movies yet!😔',
+                      'You have not added any movies yet!',
                       style: GoogleFonts.aBeeZee(
                         textStyle: const TextStyle(
                           fontSize: 24,
@@ -177,6 +178,58 @@ class _FlixtixPageState extends State<FlixtixPage> {
                       thisMovie['movieDescription'],
                       thisMovie['imageUrl'],
                     ),
+                    onSeeDetailsPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: ((context) {
+                          return Container(
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              color: MyColors.offWhiteLight,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              // crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                sBoxOfHeight10,
+                                Container(
+                                  height: 7,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                    color: MyColors.greyLight,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                sBoxOfHeight20,
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 20.0,
+                                    right: 20,
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: Image.network(
+                                      '${thisMovie['imageUrl']}',
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 150,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  'Name: ${thisMovie['movieName']}',
+                                  style: GoogleFonts.aBeeZee(),
+                                ),
+                                sBoxOfHeight20,
+                                Text(
+                                    'Personal Rating: ${thisMovie['personalRating']}'),
+                              ],
+                            ),
+                          );
+                        }),
+                      );
+                    },
                   );
                 },
               );
@@ -192,9 +245,12 @@ class _FlixtixPageState extends State<FlixtixPage> {
           }),
       floatingActionButton: FloatingActionButton(
         onPressed: openMovieAdditionDialog,
-        backgroundColor: MyColors.pasteColorLight,
+        backgroundColor: MyColors.greyLight,
         shape: const CircleBorder(),
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          color: MyColors.offWhiteLight,
+        ),
       ),
     );
   }

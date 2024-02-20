@@ -31,8 +31,8 @@ class TodoListTile extends StatelessWidget {
               onPressed: onEditPressed,
               icon: Icons.edit,
               label: "Edit",
-              backgroundColor: Colors.grey,
-              foregroundColor: Colors.white,
+              backgroundColor: MyColors.greyLight,
+              foregroundColor: MyColors.offWhiteLight,
               borderRadius: BorderRadius.circular(12),
             ),
             SlidableAction(
@@ -48,11 +48,11 @@ class TodoListTile extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(25),
           decoration: BoxDecoration(
-            color: MyColors.pasteColorLight,
+            color: MyColors.offWhiteLight,
             borderRadius: BorderRadius.circular(20),
             boxShadow: const [
               BoxShadow(
-                color: MyColors.pasteColorLight,
+                color: MyColors.offWhiteLight,
                 blurRadius: 2.0,
                 offset: Offset(0, 5), // shadow direction: bottom right
               ),
@@ -60,13 +60,11 @@ class TodoListTile extends StatelessWidget {
           ),
           child: Row(
             children: [
-              //checkbox
               Checkbox(
                 value: isCompleted,
                 onChanged: onChanged,
-                activeColor: Colors.black,
+                activeColor: MyColors.greyLight,
               ),
-              //title of the task
               Text(
                 taskName,
                 style: TextStyle(

@@ -43,14 +43,15 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: AnimatedBottomNavigationBar(
         icons: Consts.bottomNavIcons,
         activeIndex: _bottomNavIndex,
-        backgroundColor: MyColors.pasteColorLight,
-        // rightCornerRadius: 40,
-        // leftCornerRadius: 40,
+        backgroundColor: MyColors.offWhiteLight,
         gapLocation: GapLocation.none,
         elevation: 0,
-        // height: 70,
-        activeColor: Colors.black,
+        height: 70,
+        activeColor: MyColors.greyLight,
         inactiveColor: Colors.blueGrey,
+        // notchMargin: 10,
+        borderColor: MyColors.greyLight,
+        borderWidth: 0.8,
         onTap: (index) {
           setState(() {
             _bottomNavIndex = index;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moviflix/utils/my_colors.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
@@ -29,6 +30,7 @@ class CustomTextField extends StatelessWidget {
       obscureText: obscureText ?? false,
       autofocus: autofocus ?? false,
       decoration: InputDecoration(
+        focusColor: MyColors.greyLight,
         labelText: labelText,
         labelStyle: TextStyle(fontSize: fontSize),
         prefixIcon: prefixIcon,

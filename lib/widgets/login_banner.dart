@@ -16,7 +16,7 @@ class LoginBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      color: MyColors.pasteColorLight,
+      color: MyColors.offWhiteLight,
       child: Padding(
         padding: const EdgeInsets.only(left: 16.0, top: 16.0),
         child: Column(

@@ -116,7 +116,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MyColors.pasteColorLight,
+      backgroundColor: MyColors.offWhiteLight,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Theme.of(context).primaryColor,
@@ -133,10 +133,14 @@ class _RegisterPageState extends State<RegisterPage> {
           Expanded(
             flex: 3,
             child: Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(40),
                   topRight: Radius.circular(40),
+                ),
+                border: Border.all(
+                  color: MyColors.greyLight,
+                  width: 0.001,
                 ),
                 color: Colors.white,
               ),

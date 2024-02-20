@@ -7,7 +7,7 @@ void showToast({
   required String message,
   Toast toastLength = Toast.LENGTH_LONG,
   ToastGravity gravity = ToastGravity.SNACKBAR,
-  Color backgroundColor = MyColors.pasteColorLight,
+  Color backgroundColor = MyColors.offWhiteLight,
   Color textColor = Colors.black,
   double fontSize = 14.0,
 }) {

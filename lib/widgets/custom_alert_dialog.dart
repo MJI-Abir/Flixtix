@@ -21,7 +21,7 @@ class CustomAlertDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     taskNameController.text = taskName;
     return AlertDialog(
-      backgroundColor: MyColors.pasteColorLight,
+      backgroundColor: MyColors.offWhiteLight,
       content: SizedBox(
         height: 120,
         child: Column(

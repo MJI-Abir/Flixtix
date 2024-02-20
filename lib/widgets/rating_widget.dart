@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moviflix/utils/commons.dart';
+import 'package:moviflix/utils/my_colors.dart';
 
 class RatingWidget extends StatelessWidget {
   const RatingWidget({
@@ -25,7 +26,7 @@ class RatingWidget extends StatelessWidget {
           children: [
             Icon(
               icon,
-              color: Colors.black87,
+              color: MyColors.greyLight,
             ),
             const SizedBox(width: 5),
             Text(
@@ -34,7 +35,7 @@ class RatingWidget extends StatelessWidget {
                 fontFamily: 'PoorStory',
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: MyColors.greyLight,
               ),
             ),
           ],
