@@ -159,5 +159,4 @@ class MoviesListTile extends StatelessWidget {
       ),
     );
   }
-
 }
