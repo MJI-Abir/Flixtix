@@ -27,7 +27,6 @@ class _ProfilePageState extends State<ProfilePage> {
     final String movieName = _movieNameController.text.trim();
 
     if (movieName.isEmpty) {
-      // Show an error message if the movie name is empty
       return;
     }
 

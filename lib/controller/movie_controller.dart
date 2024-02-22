@@ -10,9 +10,12 @@ import 'package:http/http.dart' as http;
 
 class MovieController {
   static String _imdbRating = "";
+  static String _moviePlot = "";
+  static String _releasedYear = "";
+  static String _genre = "";
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  static Future<void> _getImdbRating(String movieName) async {
+  static Future<void> _getMovieInfoFromApi(String movieName) async {
     const String apiKey = Config.apiKey;
 
     if (movieName.isEmpty) {
@@ -30,11 +33,14 @@ class MovieController {
 
       if (data['Response'] == 'True') {
         _imdbRating = data['imdbRating'];
+        _moviePlot = data['Plot'];
+        _releasedYear = data['Year'];
+        _genre = data['Genre'];
       } else {
-        _imdbRating = "Not found";
+        _imdbRating = _genre = _releasedYear = _moviePlot = "Not Found";
       }
     } else {
-      _imdbRating = "Error";
+        _imdbRating = _genre = _releasedYear = _moviePlot = "Error";
     }
   }
 
@@ -47,7 +53,7 @@ class MovieController {
     TextEditingController movieDescriptionController,
   ) async {
     String movieName = movieNameController.text;
-    await MovieController._getImdbRating(movieName);
+    await MovieController._getMovieInfoFromApi(movieName);
     double personalRating = double.parse(personalRatingController.text);
     String movieDescription = movieDescriptionController.text;
     DateTime now = DateTime.now();
@@ -57,6 +63,9 @@ class MovieController {
       'movieName': movieName,
       'personalRating': personalRating,
       'imdbRating': MovieController._imdbRating,
+      'moviePlot': MovieController._moviePlot,
+      'releasedYear': MovieController._releasedYear,
+      'genre': MovieController._genre,
       'movieDescription': movieDescription,
       'isFavorite': false,
       'imageUrl': imageUrl,
