@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moviflix/utils/commons.dart';
+import 'package:moviflix/utils/consts.dart';
 import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/widgets/rating_widget.dart';
 
@@ -35,7 +36,7 @@ class MoviesListTile extends StatelessWidget {
         '${timestamp.toDate().day}-${timestamp.toDate().month}-${timestamp.toDate().year}';
     return Padding(
       padding:
-          const EdgeInsets.only(left: 20, right: 20, top: 7.5, bottom: 7.5),
+           const EdgeInsets.only(left: kDefaultPadding, right: kDefaultPadding, top: 7.5, bottom: 7.5),
       child: Slidable(
         endActionPane: ActionPane(
           motion: const DrawerMotion(),

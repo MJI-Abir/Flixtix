@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/widgets/custom_alert_dialog.dart';
 import 'package:moviflix/widgets/custom_dialog_box_with_text_field.dart';
@@ -50,11 +51,10 @@ class _TodoPageState extends State<TodoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           "MANAGE YOUR TASKS",
-          style: TextStyle(
-            fontFamily: "SingleDay",
-            fontWeight: FontWeight.bold,
+          style: GoogleFonts.roboto(
+            textStyle: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
         elevation: 0,

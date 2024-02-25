@@ -5,14 +5,14 @@ class CustomOutlinedButton extends StatelessWidget {
   const CustomOutlinedButton({
     super.key,
     required this.onPressed,
-    required this.iconData,
+    this.iconData,
     required this.text,
-    required this.svgAssetName,
+    this.svgAssetName,
   });
   final VoidCallback onPressed;
-  final IconData iconData;
+  final IconData? iconData;
   final String text;
-  final String svgAssetName;
+  final String? svgAssetName;
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +21,17 @@ class CustomOutlinedButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SvgPicture.asset(
-            'assets/icons/$svgAssetName',
-            semanticsLabel: '$text logo',
-            height: 30,
-            width: 30,
-          ),
+          svgAssetName != null
+              ? SvgPicture.asset(
+                  'assets/icons/$svgAssetName',
+                  semanticsLabel: '$text logo',
+                  height: 30,
+                  width: 30,
+                )
+              : Icon(
+                  iconData,
+                  size: 30,
+                ),
           const SizedBox(
             width: 10,
           ),

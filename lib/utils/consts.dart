@@ -8,3 +8,5 @@ class Consts {
   ];
   
 }
+
+const double kDefaultPadding = 20;

@@ -107,11 +107,10 @@ class _FlixtixPageState extends State<FlixtixPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           "Flixtix",
-          style: TextStyle(
-            fontFamily: "SingleDay",
-            fontWeight: FontWeight.bold,
+          style: GoogleFonts.roboto(
+            textStyle: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
         elevation: 0,

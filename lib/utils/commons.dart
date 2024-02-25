@@ -25,7 +25,7 @@ void showErrorToast({
   required String message,
   Toast toastLength = Toast.LENGTH_LONG,
   ToastGravity gravity = ToastGravity.TOP_RIGHT,
-  Color backgroundColor = const Color(0xFFFE4A49),
+  Color backgroundColor = MyColors.redAlertLight,
   Color textColor = Colors.white,
   double fontSize = 14.0,
 }) {
@@ -38,6 +38,13 @@ void showErrorToast({
     fontSize: fontSize,
   );
 }
+
+Widget horizontalBar = Container(
+  height: 5,
+  decoration: const BoxDecoration(
+    color: MyColors.redAlertLight,
+  ),
+);
 
 var smallSubtitleText = GoogleFonts.aBeeZee(
   textStyle: const TextStyle(fontSize: 12, color: Colors.black54),
