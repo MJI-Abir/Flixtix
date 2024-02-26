@@ -3,10 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moviflix/enums/enums.dart';
+import 'package:moviflix/service/firebase_service.dart';
 import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/widgets/custom_movie_bottom_sheet.dart';
 import 'package:moviflix/widgets/movie_add_update_dialog.dart';
-import 'package:moviflix/controller/movie_controller.dart';
 import 'package:moviflix/widgets/movies_list_tile.dart';
 
 class FlixtixPage extends StatefulWidget {
@@ -44,7 +44,7 @@ class _FlixtixPageState extends State<FlixtixPage> {
             Navigator.of(context).pop();
           },
           onAddMovie: () {
-            MovieController.saveMovie(
+            FirebaseService.saveMovie(
               context,
               _firestore,
               _imageUrl,
@@ -88,7 +88,7 @@ class _FlixtixPageState extends State<FlixtixPage> {
             Navigator.of(context).pop();
           },
           onUpdateMovie: () {
-            MovieController.updateMovie(
+            FirebaseService.updateMovie(
               context,
               _firestore,
               _movieNameController,
@@ -166,7 +166,7 @@ class _FlixtixPageState extends State<FlixtixPage> {
                     imdbRating: thisMovie['imdbRating'],
                     imgPath: thisMovie['imageUrl'],
                     timestamp: thisMovie['timestamp'],
-                    onDelete: (context) => MovieController.deleteMovie(
+                    onDelete: (context) => FirebaseService.deleteMovie(
                       context,
                       _firestore,
                       thisMovie['id'],

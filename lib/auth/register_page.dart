@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:moviflix/home_page/home_screen.dart';
+import 'package:moviflix/presentation/home_page/home_screen.dart';
 import 'package:moviflix/utils/commons.dart';
 import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/utils/routes.dart';

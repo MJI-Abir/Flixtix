@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:moviflix/service/firebase_service.dart';
 import 'package:moviflix/utils/my_colors.dart';
 import 'package:moviflix/widgets/custom_alert_dialog.dart';
 import 'package:moviflix/widgets/custom_dialog_box_with_text_field.dart';
-import 'package:moviflix/controller/task_controller.dart';
 import 'package:moviflix/widgets/todo_list_tile.dart';
 
 class TodoPage extends StatefulWidget {
@@ -39,7 +39,7 @@ class _TodoPageState extends State<TodoPage> {
         return CustomAlertDialog(
           onCancel: () => Navigator.of(context).pop(),
           onUpdate: () =>
-              TaskController.updateTask(context, _taskNameController, taskId),
+              FirebaseService.updateTask(context, _taskNameController, taskId),
           taskNameController: _taskNameController,
           taskName: taskName,
         );
@@ -67,7 +67,6 @@ class _TodoPageState extends State<TodoPage> {
             .orderBy('timestamp')
             .where('userId', isEqualTo: _auth.currentUser!.uid)
             .snapshots(),
-        // stream: _firestore.collection('tasks').orderBy('timestamp').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView(
@@ -79,9 +78,9 @@ class _TodoPageState extends State<TodoPage> {
                     taskName: data['taskName'],
                     isCompleted: data['isCompleted'],
                     onDelete: (context) =>
-                        TaskController.deleteTask(data['id']),
+                        FirebaseService.deleteTask(data['id']),
                     onChanged: (value) =>
-                        TaskController.checkboxChanged(data['id'], value),
+                        FirebaseService.checkboxChanged(data['id'], value),
                     onEditPressed: (context) =>
                         openUpdateAlertDialog(data['id'], data['taskName']),
                   );

@@ -1,48 +1,64 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:moviflix/config/config.dart';
+import 'package:moviflix/service/api_service.dart';
 import 'package:moviflix/utils/commons.dart';
-import 'package:http/http.dart' as http;
 
-class MovieController {
-  static String _imdbRating = "";
-  static String _moviePlot = "";
-  static String _releasedYear = "";
-  static String _genre = "";
+class FirebaseService {
+  static const String _imdbRating = "";
+  static const String _moviePlot = "";
+  static const String _releasedYear = "";
+  static const String _genre = "";
+  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  static Future<void> _getMovieInfoFromApi(String movieName) async {
-    const String apiKey = Config.apiKey;
 
-    if (movieName.isEmpty) {
-      // Show an error message if the movie name is empty
-      return;
-    }
-
-    final String apiUrl =
-        'https://www.omdbapi.com/?t=$movieName&apikey=$apiKey';
-
-    final http.Response response = await http.get(Uri.parse(apiUrl));
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-
-      if (data['Response'] == 'True') {
-        _imdbRating = data['imdbRating'];
-        _moviePlot = data['Plot'];
-        _releasedYear = data['Year'];
-        _genre = data['Genre'];
-      } else {
-        _imdbRating = _genre = _releasedYear = _moviePlot = "Not Found";
-      }
-    } else {
-        _imdbRating = _genre = _releasedYear = _moviePlot = "Error";
-    }
+  //-------------FOR TASKS DATABASE-------------//
+  static Future updateTask(BuildContext context,
+      TextEditingController taskNameController, String taskId) async {
+    String taskName = taskNameController.text;
+    _firestore
+        .collection('tasks')
+        .doc(taskId)
+        .update({'taskName': taskName})
+        .then(
+          (_) => showToast(
+            message: "Task updated successfully",
+          ),
+        )
+        .catchError(
+          (error) => showToast(
+            message: "Failed: $error",
+          ),
+        );
+    Navigator.of(context).pop();
   }
+
+  static Future deleteTask(String taskId) async {
+    _firestore
+        .collection('tasks')
+        .doc(taskId)
+        .delete()
+        .then(
+          (_) => showToast(
+            message: "Task deleted successfully",
+          ),
+        )
+        .catchError(
+          (error) => showToast(
+            message: "Failed: $error",
+          ),
+        );
+  }
+
+  static void checkboxChanged(String taskId, bool? value) async {
+    await _firestore.collection('tasks').doc(taskId).update(
+      {'isCompleted': value},
+    );
+  }
+
+  //-----------FOR MOVIES DATABASE-----------//
 
   static void saveMovie(
     BuildContext context,
@@ -53,7 +69,7 @@ class MovieController {
     TextEditingController movieDescriptionController,
   ) async {
     String movieName = movieNameController.text;
-    await MovieController._getMovieInfoFromApi(movieName);
+    await ApiService.getMovieData(movieName);
     double personalRating = double.parse(personalRatingController.text);
     String movieDescription = movieDescriptionController.text;
     DateTime now = DateTime.now();
@@ -62,10 +78,10 @@ class MovieController {
         await firestore.collection('movies').add({
       'movieName': movieName,
       'personalRating': personalRating,
-      'imdbRating': MovieController._imdbRating,
-      'moviePlot': MovieController._moviePlot,
-      'releasedYear': MovieController._releasedYear,
-      'genre': MovieController._genre,
+      'imdbRating': FirebaseService._imdbRating,
+      'moviePlot': FirebaseService._moviePlot,
+      'releasedYear': FirebaseService._releasedYear,
+      'genre': FirebaseService._genre,
       'movieDescription': movieDescription,
       'isFavorite': false,
       'imageUrl': imageUrl,

@@ -1,9 +1,9 @@
 import "package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
-import "package:moviflix/flixtix_page/flixtix_page.dart";
-import "package:moviflix/profile_page/profile_page.dart";
-import "package:moviflix/todo_page/todo_page.dart";
+import "package:moviflix/presentation/flixtix_page/flixtix_page.dart";
+import "package:moviflix/presentation/profile_page/profile_page.dart";
+import 'package:moviflix/presentation/todo_page/todo_page.dart';
 import "package:moviflix/utils/consts.dart";
 import "package:moviflix/utils/my_colors.dart";
 import "package:moviflix/utils/routes.dart";
